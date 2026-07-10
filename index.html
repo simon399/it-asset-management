@@ -8,92 +8,97 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
-:root{--primary:#1a56db;--sidebar-w:220px}
-body{background:#f4f6fb;font-family:'Segoe UI',sans-serif;font-size:14px}
-#loginScreen{position:fixed;inset:0;background:#1e293b;display:flex;align-items:center;justify-content:center;z-index:9999}
-#loginBox{background:#fff;border-radius:16px;padding:48px 40px;text-align:center;max-width:400px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.4)}
-#loginBox h2{color:#1e293b;font-weight:700;margin-bottom:4px}
-#loginBox p{color:#64748b;margin-bottom:32px}
-.btn-google{display:flex;align-items:center;gap:12px;justify-content:center;background:#fff;border:2px solid #e2e8f0;border-radius:8px;padding:12px 24px;font-size:15px;font-weight:600;color:#374151;cursor:pointer;width:100%;transition:all .15s}
-.btn-google:hover{background:#f8fafc;border-color:#94a3b8}
-.btn-google img{width:22px}
-#syncStatus{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;border-radius:20px;padding:6px 16px;font-size:12px;z-index:999;display:none;align-items:center;gap:8px}
-#syncStatus.show{display:flex}
-.sync-dot{width:8px;height:8px;border-radius:50%;background:#22c55e}
-.sync-dot.syncing{background:#f59e0b;animation:pulse 1s infinite}
-.sync-dot.error{background:#ef4444}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-#sidebar{position:fixed;top:0;left:0;height:100vh;width:var(--sidebar-w);background:#1e293b;color:#cbd5e1;z-index:100;display:flex;flex-direction:column}
-#sidebar .brand{padding:20px 16px 12px;font-size:15px;font-weight:700;color:#fff;border-bottom:1px solid #334155}
-#sidebar .brand small{display:block;font-size:11px;font-weight:400;color:#94a3b8;margin-top:2px}
-#sidebar .user-info{padding:10px 16px;border-bottom:1px solid #334155;display:flex;align-items:center;gap:8px}
-#sidebar .user-info img{width:28px;height:28px;border-radius:50%}
-#sidebar .user-info span{font-size:11px;color:#94a3b8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#sidebar nav a{display:flex;align-items:center;gap:10px;padding:10px 16px;color:#94a3b8;text-decoration:none;border-left:3px solid transparent;transition:all .15s}
-#sidebar nav a:hover,#sidebar nav a.active{color:#fff;background:#273549;border-left-color:var(--primary)}
-#sidebar nav a i{font-size:16px}
-#sidebar .sidebar-section{padding:8px 16px 4px;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#475569;margin-top:8px}
-#main{margin-left:var(--sidebar-w);min-height:100vh}
-#topbar{background:#fff;border-bottom:1px solid #e2e8f0;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
-#topbar h5{margin:0;font-weight:600;color:#1e293b}
-.page{display:none;padding:24px}
-.page.active{display:block}
-.stat-card{background:#fff;border-radius:12px;padding:20px;border:1px solid #e2e8f0}
-.stat-card .icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
-.stat-card .val{font-size:28px;font-weight:700;color:#1e293b;line-height:1}
-.stat-card .lbl{font-size:12px;color:#64748b;margin-top:4px}
-.table-card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;overflow:hidden}
-.table-card .toolbar{padding:14px 16px;border-bottom:1px solid #f1f5f9;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.table thead th{background:#f8fafc;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:#64748b;border-bottom:1px solid #e2e8f0;padding:10px 12px;white-space:nowrap}
-.table tbody td{padding:9px 12px;vertical-align:middle;border-bottom:1px solid #f1f5f9;font-size:13px}
-.table tbody tr:hover{background:#f8fafc}
-.badge-type{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:500}
-.s-active{background:#dcfce7;color:#166534}
-.s-repair{background:#fef9c3;color:#854d0e}
-.s-inactive{background:#f1f5f9;color:#475569}
-.s-retired{background:#fee2e2;color:#991b1b}
-.w-expired{background:#fee2e2!important}
-.w-critical{background:#fff7ed!important}
-.w-warning{background:#fefce8!important}
-.modal-header{background:#1e293b;color:#fff}
-.modal-header .btn-close{filter:invert(1)}
-.form-label{font-size:12px;font-weight:600;color:#374151;margin-bottom:4px}
-.form-control,.form-select{font-size:13px}
-.warranty-band{border-radius:8px;padding:12px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
-.wb-expired{background:#fee2e2;border-left:4px solid #dc2626}
-.wb-critical{background:#fff7ed;border-left:4px solid #ea580c}
-.wb-warning{background:#fefce8;border-left:4px solid #ca8a04}
-.wb-ok{background:#f0fdf4;border-left:4px solid #16a34a}
-.lc-row-old{background:#fff5f5}
-.lc-row-mid{background:#fffbeb}
-.chart-box{background:#fff;border-radius:12px;border:1px solid #e2e8f0;padding:20px}
-#scannerVideo{width:100%;max-height:300px;object-fit:cover}
-#scannerResult{background:#1e293b;color:#4ade80;font-family:monospace;padding:12px;font-size:14px;min-height:44px}
-#toastContainer{position:fixed;bottom:60px;right:24px;z-index:9999}
-.toast-msg{background:#1e293b;color:#fff;border-radius:8px;padding:12px 20px;margin-top:8px;font-size:13px;box-shadow:0 4px 12px rgba(0,0,0,.2);animation:fadeIn .2s}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+:root {
+  --primary: #1a56db;
+  --danger-soft: #fff5f5;
+  --warn-soft: #fffbeb;
+  --success-soft: #f0fdf4;
+  --sidebar-w: 220px;
+}
+body { background: #f4f6fb; font-family: 'Segoe UI', sans-serif; font-size: 14px; }
+#sidebar {
+  position: fixed; top: 0; left: 0; height: 100vh; width: var(--sidebar-w);
+  background: #1e293b; color: #cbd5e1; z-index: 100;
+  display: flex; flex-direction: column;
+}
+#sidebar .brand { padding: 20px 16px 12px; font-size: 15px; font-weight: 700; color: #fff; border-bottom: 1px solid #334155; }
+#sidebar .brand small { display: block; font-size: 11px; font-weight: 400; color: #94a3b8; margin-top: 2px; }
+#sidebar nav a {
+  display: flex; align-items: center; gap: 10px; padding: 10px 16px;
+  color: #94a3b8; text-decoration: none; border-left: 3px solid transparent;
+  transition: all .15s;
+}
+#sidebar nav a:hover, #sidebar nav a.active { color: #fff; background: #273549; border-left-color: var(--primary); }
+#sidebar nav a i { font-size: 16px; }
+#sidebar .sidebar-section { padding: 8px 16px 4px; font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: #475569; margin-top: 8px; }
+#main { margin-left: var(--sidebar-w); min-height: 100vh; }
+#topbar { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
+#topbar h5 { margin: 0; font-weight: 600; color: #1e293b; }
+.page { display: none; padding: 24px; }
+.page.active { display: block; }
+
+/* Cards */
+.stat-card { background: #fff; border-radius: 12px; padding: 20px; border: 1px solid #e2e8f0; }
+.stat-card .icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.stat-card .val { font-size: 28px; font-weight: 700; color: #1e293b; line-height: 1; }
+.stat-card .lbl { font-size: 12px; color: #64748b; margin-top: 4px; }
+
+/* Table */
+.table-card { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; }
+.table-card .toolbar { padding: 14px 16px; border-bottom: 1px solid #f1f5f9; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.table thead th { background: #f8fafc; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: #64748b; border-bottom: 1px solid #e2e8f0; padding: 10px 12px; white-space: nowrap; }
+.table tbody td { padding: 9px 12px; vertical-align: middle; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+.table tbody tr:hover { background: #f8fafc; }
+.badge-type { font-size: 11px; padding: 3px 8px; border-radius: 20px; font-weight: 500; }
+
+/* Status badges */
+.s-active   { background: #dcfce7; color: #166534; }
+.s-repair   { background: #fef9c3; color: #854d0e; }
+.s-inactive { background: #f1f5f9; color: #475569; }
+.s-retired  { background: #fee2e2; color: #991b1b; }
+
+/* Warranty alert */
+.w-expired  { background: #fee2e2 !important; }
+.w-critical { background: #fff7ed !important; }
+.w-warning  { background: #fefce8 !important; }
+
+/* Modal */
+.modal-header { background: #1e293b; color: #fff; }
+.modal-header .btn-close { filter: invert(1); }
+.form-label { font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 4px; }
+.form-control, .form-select { font-size: 13px; }
+
+/* Warranty page */
+.warranty-band { border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
+.wb-expired  { background: #fee2e2; border-left: 4px solid #dc2626; }
+.wb-critical { background: #fff7ed; border-left: 4px solid #ea580c; }
+.wb-warning  { background: #fefce8; border-left: 4px solid #ca8a04; }
+.wb-ok       { background: #f0fdf4; border-left: 4px solid #16a34a; }
+
+/* Budget / Lifecycle */
+.lc-row-old { background: #fff5f5; }
+.lc-row-mid { background: #fffbeb; }
+
+/* Chart container */
+.chart-box { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; padding: 20px; }
+
+input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
+.cursor-pointer { cursor: pointer; }
+
+#toastContainer { position: fixed; bottom: 24px; right: 24px; z-index: 9999; }
+.toast-msg { background: #1e293b; color: #fff; border-radius: 8px; padding: 12px 20px; margin-top: 8px; font-size: 13px; box-shadow: 0 4px 12px rgba(0,0,0,.2); animation: fadeIn .2s; }
+@keyframes fadeIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
 </style>
 </head>
 <body>
 
-<div id="loginScreen">
-  <div id="loginBox">
-    <div style="font-size:48px;margin-bottom:16px">🖥️</div>
-    <h2>IT Asset Management</h2>
-    <p>SSIS School – Đăng nhập để tiếp tục</p>
-    <button class="btn-google" onclick="signIn()">
-      <img src="https://www.google.com/favicon.ico" alt="Google">
-      Đăng nhập bằng Google
-    </button>
-    <p class="text-muted mt-3" style="font-size:11px">Chỉ tài khoản @ssis.edu.vn được phép truy cập</p>
+<!-- Sidebar -->
+<div id="sidebar">
+  <div class="brand">
+    <i class="bi bi-hdd-network-fill"></i> IT Assets
+    <small>SSIS School</small>
   </div>
-</div>
-
-<div id="sidebar" style="display:none">
-  <div class="brand"><i class="bi bi-hdd-network-fill"></i> IT Assets<small>SSIS School</small></div>
-  <div class="user-info"><img id="userAvatar" src="" alt=""><span id="userName">...</span></div>
   <nav>
     <div class="sidebar-section">Tổng quan</div>
     <a href="#" class="active" data-page="dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a>
@@ -103,48 +108,116 @@ body{background:#f4f6fb;font-family:'Segoe UI',sans-serif;font-size:14px}
     <a href="#" data-page="budget"><i class="bi bi-currency-dollar"></i> Ngân sách / Lifecycle</a>
     <div class="sidebar-section">Công cụ</div>
     <a href="#" data-page="import"><i class="bi bi-upload"></i> Import / Export</a>
-    <div style="flex:1"></div>
-    <a href="#" onclick="signOut()" style="border-top:1px solid #334155;margin-top:8px"><i class="bi bi-box-arrow-left"></i> Đăng xuất</a>
   </nav>
 </div>
 
-<div id="main" style="display:none">
+<!-- Main -->
+<div id="main">
   <div id="topbar">
     <h5 id="pageTitle">Dashboard</h5>
     <div class="d-flex gap-2 align-items-center">
-      <button class="btn btn-outline-secondary btn-sm" onclick="syncNow()" title="Đồng bộ"><i class="bi bi-arrow-clockwise"></i></button>
       <span class="text-muted" style="font-size:12px" id="deviceCount">0 thiết bị</span>
-      <button class="btn btn-success btn-sm" onclick="openScanner()"><i class="bi bi-qr-code-scan"></i> Scan</button>
       <button class="btn btn-primary btn-sm" onclick="openAddModal()"><i class="bi bi-plus-lg"></i> Thêm thiết bị</button>
     </div>
   </div>
 
+  <!-- DASHBOARD -->
   <div class="page active" id="page-dashboard">
     <div class="row g-3 mb-4">
-      <div class="col-6 col-xl-3"><div class="stat-card"><div class="d-flex align-items-center gap-3"><div class="icon" style="background:#eff6ff"><i class="bi bi-hdd-stack" style="color:#1a56db"></i></div><div><div class="val" id="stat-total">0</div><div class="lbl">Tổng thiết bị</div></div></div></div></div>
-      <div class="col-6 col-xl-3"><div class="stat-card"><div class="d-flex align-items-center gap-3"><div class="icon" style="background:#fef2f2"><i class="bi bi-exclamation-triangle" style="color:#dc2626"></i></div><div><div class="val text-danger" id="stat-expired">0</div><div class="lbl">Hết bảo hành</div></div></div></div></div>
-      <div class="col-6 col-xl-3"><div class="stat-card"><div class="d-flex align-items-center gap-3"><div class="icon" style="background:#fff7ed"><i class="bi bi-clock-history" style="color:#ea580c"></i></div><div><div class="val text-warning" id="stat-soon">0</div><div class="lbl">Sắp hết (90 ngày)</div></div></div></div></div>
-      <div class="col-6 col-xl-3"><div class="stat-card"><div class="d-flex align-items-center gap-3"><div class="icon" style="background:#f0fdf4"><i class="bi bi-currency-dollar" style="color:#16a34a"></i></div><div><div class="val text-success" id="stat-value">0</div><div class="lbl">Tổng giá trị (tr₫)</div></div></div></div></div>
+      <div class="col-6 col-xl-3">
+        <div class="stat-card">
+          <div class="d-flex align-items-center gap-3 mb-2">
+            <div class="icon" style="background:#eff6ff"><i class="bi bi-hdd-stack" style="color:#1a56db"></i></div>
+            <div><div class="val" id="stat-total">0</div><div class="lbl">Tổng thiết bị</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-xl-3">
+        <div class="stat-card">
+          <div class="d-flex align-items-center gap-3 mb-2">
+            <div class="icon" style="background:#fef2f2"><i class="bi bi-exclamation-triangle" style="color:#dc2626"></i></div>
+            <div><div class="val text-danger" id="stat-expired">0</div><div class="lbl">Hết bảo hành</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-xl-3">
+        <div class="stat-card">
+          <div class="d-flex align-items-center gap-3 mb-2">
+            <div class="icon" style="background:#fff7ed"><i class="bi bi-clock-history" style="color:#ea580c"></i></div>
+            <div><div class="val text-warning" id="stat-soon">0</div><div class="lbl">Sắp hết (90 ngày)</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-xl-3">
+        <div class="stat-card">
+          <div class="d-flex align-items-center gap-3 mb-2">
+            <div class="icon" style="background:#f0fdf4"><i class="bi bi-currency-dollar" style="color:#16a34a"></i></div>
+            <div><div class="val text-success" id="stat-value">0</div><div class="lbl">Tổng giá trị (tr₫)</div></div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="row g-3">
-      <div class="col-lg-6"><div class="chart-box"><h6 class="mb-3 fw-semibold">Thiết bị theo loại</h6><canvas id="chartByType" height="200"></canvas></div></div>
-      <div class="col-lg-6"><div class="chart-box"><h6 class="mb-3 fw-semibold">Trạng thái thiết bị</h6><canvas id="chartByStatus" height="200"></canvas></div></div>
-      <div class="col-12"><div class="table-card"><div class="toolbar"><b>⚠️ Bảo hành sắp hết / đã hết</b></div><div class="table-responsive"><table class="table mb-0"><thead><tr><th>Tên</th><th>Loại</th><th>S/N</th><th>Hết BH</th><th>Còn lại</th><th>Vị trí</th></tr></thead><tbody id="dashWarrantyTable"></tbody></table></div></div></div>
+      <div class="col-lg-6">
+        <div class="chart-box">
+          <h6 class="mb-3 fw-600">Thiết bị theo loại</h6>
+          <canvas id="chartByType" height="200"></canvas>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="chart-box">
+          <h6 class="mb-3 fw-600">Trạng thái thiết bị</h6>
+          <canvas id="chartByStatus" height="200"></canvas>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="table-card">
+          <div class="toolbar"><b>⚠️ Cần chú ý – Bảo hành sắp hết / đã hết</b></div>
+          <div class="table-responsive">
+            <table class="table mb-0">
+              <thead><tr><th>Tên</th><th>Loại</th><th>S/N</th><th>Hết bảo hành</th><th>Còn lại</th><th>Vị trí</th></tr></thead>
+              <tbody id="dashWarrantyTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
+  <!-- DEVICES -->
   <div class="page" id="page-devices">
     <div class="table-card">
       <div class="toolbar">
         <input type="search" class="form-control form-control-sm" style="width:200px" placeholder="🔍 Tìm kiếm..." id="searchInput" oninput="renderDevices()">
-        <select class="form-select form-select-sm" style="width:160px" id="filterType" onchange="renderDevices()"><option value="">Tất cả loại</option></select>
-        <select class="form-select form-select-sm" style="width:140px" id="filterStatus" onchange="renderDevices()"><option value="">Mọi trạng thái</option><option>Đang dùng</option><option>Sửa chữa</option><option>Ngưng dùng</option><option>Thanh lý</option></select>
-        <select class="form-select form-select-sm" style="width:160px" id="filterLocation" onchange="renderDevices()"><option value="">Tất cả vị trí</option></select>
+        <select class="form-select form-select-sm" style="width:160px" id="filterType" onchange="renderDevices()">
+          <option value="">Tất cả loại</option>
+        </select>
+        <select class="form-select form-select-sm" style="width:140px" id="filterStatus" onchange="renderDevices()">
+          <option value="">Mọi trạng thái</option>
+          <option>Đang dùng</option><option>Sửa chữa</option><option>Ngưng dùng</option><option>Thanh lý</option>
+        </select>
+        <select class="form-select form-select-sm" style="width:160px" id="filterLocation" onchange="renderDevices()">
+          <option value="">Tất cả vị trí</option>
+        </select>
         <button class="btn btn-outline-secondary btn-sm ms-auto" onclick="clearFilters()"><i class="bi bi-x-circle"></i> Xóa lọc</button>
       </div>
       <div class="table-responsive">
         <table class="table mb-0">
-          <thead><tr><th>#</th><th>Tên / Model</th><th>Loại</th><th>S/N</th><th>IP</th><th>Vị trí</th><th>Ngày mua</th><th>Hết BH</th><th>Giá (₫)</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Tên / Model</th>
+              <th>Loại</th>
+              <th>S/N</th>
+              <th>IP</th>
+              <th>Vị trí</th>
+              <th>Ngày mua</th>
+              <th>Hết bảo hành</th>
+              <th>Giá (₫)</th>
+              <th>Trạng thái</th>
+              <th style="width:80px">Thao tác</th>
+            </tr>
+          </thead>
           <tbody id="deviceTable"></tbody>
         </table>
       </div>
@@ -152,29 +225,99 @@ body{background:#f4f6fb;font-family:'Segoe UI',sans-serif;font-size:14px}
     </div>
   </div>
 
+  <!-- WARRANTY -->
   <div class="page" id="page-warranty">
-    <div class="mb-3"><select class="form-select form-select-sm" style="width:200px" id="warrantyFilter" onchange="renderWarranty()"><option value="all">Tất cả</option><option value="expired">Đã hết hạn</option><option value="30">Hết trong 30 ngày</option><option value="90">Hết trong 90 ngày</option><option value="180">Hết trong 180 ngày</option><option value="ok">Còn hạn dài</option></select></div>
+    <div class="row g-3 mb-3">
+      <div class="col-auto">
+        <select class="form-select form-select-sm" id="warrantyFilter" onchange="renderWarranty()">
+          <option value="all">Tất cả</option>
+          <option value="expired">Đã hết hạn</option>
+          <option value="30">Hết trong 30 ngày</option>
+          <option value="90">Hết trong 90 ngày</option>
+          <option value="180">Hết trong 180 ngày</option>
+          <option value="ok">Còn hạn dài</option>
+        </select>
+      </div>
+    </div>
     <div id="warrantyList"></div>
   </div>
 
+  <!-- BUDGET / LIFECYCLE -->
   <div class="page" id="page-budget">
     <div class="row g-3 mb-3">
-      <div class="col-md-4"><div class="stat-card text-center"><div class="val text-primary" id="bud-total-val">0</div><div class="lbl">Tổng giá trị tài sản (₫)</div></div></div>
-      <div class="col-md-4"><div class="stat-card text-center"><div class="val text-danger" id="bud-old">0</div><div class="lbl">Quá lifecycle (cần thay)</div></div></div>
-      <div class="col-md-4"><div class="stat-card text-center"><div class="val text-warning" id="bud-mid">0</div><div class="lbl">60-100% lifecycle</div></div></div>
+      <div class="col-md-4">
+        <div class="stat-card text-center">
+          <div class="val text-primary" id="bud-total-val">0</div>
+          <div class="lbl">Tổng giá trị tài sản (₫)</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-card text-center">
+          <div class="val text-danger" id="bud-old">0</div>
+          <div class="lbl">Thiết bị &gt; 5 năm (cần thay)</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-card text-center">
+          <div class="val text-warning" id="bud-mid">0</div>
+          <div class="lbl">Thiết bị 3–5 năm (theo dõi)</div>
+        </div>
+      </div>
     </div>
-    <div class="chart-box mb-3"><h6 class="fw-semibold mb-3">Giá trị mua hàng theo năm</h6><canvas id="chartByYear" height="120"></canvas></div>
+    <div class="chart-box mb-3">
+      <h6 class="fw-600 mb-3">Giá trị mua hàng theo năm</h6>
+      <canvas id="chartByYear" height="120"></canvas>
+    </div>
     <div class="table-card">
-      <div class="toolbar"><b>📋 Lifecycle – Dự kiến thay thế</b><button class="btn btn-success btn-sm ms-auto" onclick="exportBudgetExcel()"><i class="bi bi-file-earmark-excel"></i> Xuất Excel ngân sách</button></div>
-      <div class="table-responsive"><table class="table mb-0"><thead><tr><th>Tên</th><th>Loại</th><th>Ngày mua</th><th>Tuổi (năm)</th><th>Giá gốc (₫)</th><th>Tình trạng</th><th>Dự kiến thay</th></tr></thead><tbody id="lifecycleTable"></tbody></table></div>
+      <div class="toolbar"><b>📋 Lifecycle – Dự kiến thay thế</b>
+        <button class="btn btn-success btn-sm ms-auto" onclick="exportBudgetExcel()"><i class="bi bi-file-earmark-excel"></i> Xuất Excel ngân sách</button>
+      </div>
+      <div class="table-responsive">
+        <table class="table mb-0">
+          <thead><tr><th>Tên</th><th>Loại</th><th>Ngày mua</th><th>Tuổi (năm)</th><th>Giá gốc (₫)</th><th>Tình trạng lifecycle</th><th>Dự kiến thay</th></tr></thead>
+          <tbody id="lifecycleTable"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 
+  <!-- IMPORT/EXPORT -->
   <div class="page" id="page-import">
     <div class="row g-3">
-      <div class="col-md-6"><div class="chart-box"><h6 class="fw-semibold mb-3"><i class="bi bi-download me-2 text-success"></i>Xuất dữ liệu</h6><div class="d-grid gap-2"><button class="btn btn-success" onclick="exportExcel()"><i class="bi bi-file-earmark-excel me-2"></i>Xuất toàn bộ ra Excel</button><button class="btn btn-outline-danger" onclick="exportPDF()"><i class="bi bi-file-earmark-pdf me-2"></i>Xuất PDF (in)</button></div></div></div>
-      <div class="col-md-6"><div class="chart-box"><h6 class="fw-semibold mb-3"><i class="bi bi-upload me-2 text-primary"></i>Nhập từ Excel</h6><div class="d-grid gap-2"><button class="btn btn-outline-success" onclick="downloadTemplate()"><i class="bi bi-file-earmark-arrow-down me-2"></i>Tải Template Excel</button><label class="btn btn-primary mb-0"><i class="bi bi-upload me-2"></i>Chọn file Excel import<input type="file" accept=".xlsx,.xls" hidden id="importFile" onchange="importExcel(this)"></label></div></div></div>
-      <div class="col-12"><div class="chart-box"><h6 class="fw-semibold mb-2">☁️ Google Sheets</h6><div id="importStats" class="text-muted mb-2" style="font-size:13px"></div><a href="https://docs.google.com/spreadsheets/d/1a4Rsqw39e1rQq7_QpNDJubQGBdPDDHDOJciI2elSmAU/edit" target="_blank" class="btn btn-outline-success btn-sm"><i class="bi bi-table me-1"></i>Mở Google Sheet</a><button class="btn btn-outline-primary btn-sm ms-2" onclick="syncNow()"><i class="bi bi-arrow-clockwise me-1"></i>Đồng bộ ngay</button></div></div>
+      <div class="col-md-6">
+        <div class="chart-box">
+          <h6 class="fw-semibold mb-3"><i class="bi bi-download me-2 text-success"></i>Xuất dữ liệu</h6>
+          <div class="d-grid gap-2">
+            <button class="btn btn-success" onclick="exportExcel()"><i class="bi bi-file-earmark-excel me-2"></i>Xuất toàn bộ ra Excel (.xlsx)</button>
+            <button class="btn btn-outline-danger" onclick="exportPDF()"><i class="bi bi-file-earmark-pdf me-2"></i>Xuất danh sách ra PDF (in)</button>
+            <button class="btn btn-outline-secondary" onclick="exportJSON()"><i class="bi bi-braces me-2"></i>Sao lưu dữ liệu (JSON)</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="chart-box">
+          <h6 class="fw-semibold mb-3"><i class="bi bi-upload me-2 text-primary"></i>Nhập dữ liệu</h6>
+          <p class="text-muted" style="font-size:13px">Nhập từ file Excel (.xlsx) – tải template trước để đúng định dạng.</p>
+          <div class="d-grid gap-2">
+            <button class="btn btn-outline-success" onclick="downloadTemplate()"><i class="bi bi-file-earmark-arrow-down me-2"></i>Tải Template Excel</button>
+            <label class="btn btn-primary mb-0">
+              <i class="bi bi-upload me-2"></i>Chọn file Excel để import
+              <input type="file" accept=".xlsx,.xls" hidden id="importFile" onchange="importExcel(this)">
+            </label>
+            <hr>
+            <label class="btn btn-outline-secondary mb-0">
+              <i class="bi bi-braces me-2"></i>Khôi phục từ JSON backup
+              <input type="file" accept=".json" hidden id="importJSON" onchange="importJSON(this)">
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="chart-box">
+          <h6 class="fw-semibold mb-2">Thống kê dữ liệu hiện tại</h6>
+          <div id="importStats" class="text-muted" style="font-size:13px"></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -183,38 +326,114 @@ body{background:#f4f6fb;font-family:'Segoe UI',sans-serif;font-size:14px}
 <div class="modal fade" id="deviceModal" tabindex="-1">
   <div class="modal-dialog modal-xl modal-dialog-scrollable">
     <div class="modal-content">
-      <div class="modal-header"><h5 class="modal-title" id="modalTitle">Thêm thiết bị mới</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitle">Thêm thiết bị mới</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
       <div class="modal-body">
         <form id="deviceForm">
           <div class="row g-3">
-            <div class="col-md-4"><label class="form-label">Loại thiết bị *</label><select class="form-select" id="f-type" required onchange="onTypeChange()"><option value="">-- Chọn loại --</option></select></div>
-            <div class="col-md-4"><label class="form-label">Tên / Model *</label><input class="form-control" id="f-name" placeholder="VD: Ruckus R750..." required></div>
-            <div class="col-md-4"><label class="form-label">Hãng sản xuất</label><input class="form-control" id="f-brand" placeholder="VD: Ruckus, Epson, Apple..."></div>
-            <div class="col-md-4"><label class="form-label">Serial Number (S/N)</label><div class="input-group"><input class="form-control" id="f-serial" placeholder="Serial number"><button type="button" class="btn btn-outline-secondary" onclick="openScanner('serial')" title="Scan"><i class="bi bi-qr-code-scan"></i></button></div></div>
-            <div class="col-md-4"><label class="form-label">Mã tài sản (Asset Tag)</label><input class="form-control" id="f-asset-tag" placeholder="VD: SSIS-IT-001"></div>
-            <div class="col-md-4"><label class="form-label">Trạng thái</label><select class="form-select" id="f-status"><option>Đang dùng</option><option>Sửa chữa</option><option>Ngưng dùng</option><option>Thanh lý</option></select></div>
-            <div class="col-md-6"><label class="form-label">Vị trí / Phòng</label><input class="form-control" id="f-location" placeholder="VD: Phòng IT, Lớp 2A..."></div>
-            <div class="col-md-6"><label class="form-label">Giao cho / Phụ trách</label><input class="form-control" id="f-assigned" placeholder="Tên người / bộ phận"></div>
+            <div class="col-md-4">
+              <label class="form-label">Loại thiết bị *</label>
+              <select class="form-select" id="f-type" required onchange="onTypeChange()">
+                <option value="">-- Chọn loại --</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Tên / Model *</label>
+              <input class="form-control" id="f-name" placeholder="VD: Ruckus R750, Epson EB-X51..." required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Hãng sản xuất</label>
+              <input class="form-control" id="f-brand" placeholder="VD: Ruckus, Epson, Apple...">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Serial Number (S/N)</label>
+              <input class="form-control" id="f-serial" placeholder="Serial number">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Mã tài sản (Asset Tag)</label>
+              <input class="form-control" id="f-asset-tag" placeholder="VD: SSIS-IT-001">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Trạng thái</label>
+              <select class="form-select" id="f-status">
+                <option>Đang dùng</option><option>Sửa chữa</option><option>Ngưng dùng</option><option>Thanh lý</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Vị trí / Phòng</label>
+              <input class="form-control" id="f-location" placeholder="VD: Phòng IT, Lớp 2A, Hội trường...">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Giao cho / Phụ trách</label>
+              <input class="form-control" id="f-assigned" placeholder="Tên người / bộ phận">
+            </div>
+
             <div class="col-12"><hr class="my-1"><small class="text-muted fw-semibold">MẠNG & KẾT NỐI</small></div>
-            <div class="col-md-3"><label class="form-label">Địa chỉ IP</label><input class="form-control" id="f-ip" placeholder="192.168.x.x"></div>
-            <div class="col-md-3"><label class="form-label">MAC Address</label><input class="form-control" id="f-mac" placeholder="AA:BB:CC:DD:EE:FF"></div>
-            <div class="col-md-3"><label class="form-label">Hostname</label><input class="form-control" id="f-hostname" placeholder="Tên máy trong mạng"></div>
-            <div class="col-md-3"><label class="form-label">VLAN</label><input class="form-control" id="f-vlan" placeholder="VD: VLAN 10"></div>
+            <div class="col-md-3">
+              <label class="form-label">Địa chỉ IP</label>
+              <input class="form-control" id="f-ip" placeholder="192.168.x.x">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">MAC Address</label>
+              <input class="form-control" id="f-mac" placeholder="AA:BB:CC:DD:EE:FF">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Hostname</label>
+              <input class="form-control" id="f-hostname" placeholder="Tên máy trong mạng">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">VLAN</label>
+              <input class="form-control" id="f-vlan" placeholder="VD: VLAN 10">
+            </div>
+
             <div class="col-12"><hr class="my-1"><small class="text-muted fw-semibold">MUA SẮM & BẢO HÀNH</small></div>
-            <div class="col-md-3"><label class="form-label">Ngày mua *</label><input type="date" class="form-control" id="f-purchase-date" required onchange="calcWarranty()"></div>
-            <div class="col-md-3"><label class="form-label">Thời hạn BH (tháng)</label><input type="number" class="form-control" id="f-warranty-months" placeholder="24" min="0" onchange="calcWarranty()"></div>
-            <div class="col-md-3"><label class="form-label">Hết bảo hành (tự tính)</label><input type="date" class="form-control" id="f-warranty-end" readonly style="background:#f8fafc"></div>
-            <div class="col-md-3"><label class="form-label">Số PO / Hợp đồng</label><input class="form-control" id="f-po" placeholder="Số hợp đồng"></div>
-            <div class="col-md-4"><label class="form-label">Nhà cung cấp</label><input class="form-control" id="f-supplier" placeholder="Tên công ty cung cấp"></div>
-            <div class="col-md-4"><label class="form-label">Giá mua (VND)</label><input type="number" class="form-control" id="f-price" placeholder="0" min="0"></div>
-            <div class="col-md-4"><label class="form-label">Giá dự kiến thay thế (VND)</label><input type="number" class="form-control" id="f-replace-price" placeholder="0" min="0"></div>
+            <div class="col-md-3">
+              <label class="form-label">Ngày mua *</label>
+              <input type="date" class="form-control" id="f-purchase-date" required onchange="calcWarranty()">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Thời hạn BH (tháng)</label>
+              <input type="number" class="form-control" id="f-warranty-months" placeholder="24" min="0" onchange="calcWarranty()">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Hết bảo hành (tự tính)</label>
+              <input type="date" class="form-control" id="f-warranty-end" readonly style="background:#f8fafc">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Số PO / Hợp đồng</label>
+              <input class="form-control" id="f-po" placeholder="Số hợp đồng mua">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Nhà cung cấp</label>
+              <input class="form-control" id="f-supplier" placeholder="Tên công ty cung cấp">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Giá mua (VND) *</label>
+              <input type="number" class="form-control" id="f-price" placeholder="0" min="0">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Giá dự kiến thay thế (VND)</label>
+              <input type="number" class="form-control" id="f-replace-price" placeholder="0" min="0">
+            </div>
+
             <div class="col-12"><hr class="my-1"><small class="text-muted fw-semibold">THÔNG TIN THÊM</small></div>
-            <div class="col-md-6"><label class="form-label">Cấu hình / Thông số</label><textarea class="form-control" id="f-specs" rows="2" placeholder="CPU, RAM, Storage, OS..."></textarea></div>
-            <div class="col-md-6"><label class="form-label">Ghi chú</label><textarea class="form-control" id="f-notes" rows="2" placeholder="Ghi chú thêm..."></textarea></div>
+            <div class="col-md-6">
+              <label class="form-label">Cấu hình / Thông số kỹ thuật</label>
+              <textarea class="form-control" id="f-specs" rows="2" placeholder="CPU, RAM, Storage, OS..."></textarea>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Ghi chú</label>
+              <textarea class="form-control" id="f-notes" rows="2" placeholder="Ghi chú thêm..."></textarea>
+            </div>
           </div>
         </form>
       </div>
-      <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button><button type="button" class="btn btn-primary" onclick="saveDevice()"><i class="bi bi-floppy me-1"></i>Lưu thiết bị</button></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-primary" onclick="saveDevice()"><i class="bi bi-floppy me-1"></i>Lưu thiết bị</button>
+      </div>
     </div>
   </div>
 </div>
@@ -223,280 +442,613 @@ body{background:#f4f6fb;font-family:'Segoe UI',sans-serif;font-size:14px}
 <div class="modal fade" id="viewModal" tabindex="-1">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
-      <div class="modal-header"><h5 class="modal-title" id="viewModalTitle">Chi tiết</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-      <div class="modal-body" id="viewModalBody"></div>
-      <div class="modal-footer"><button class="btn btn-warning" id="viewEditBtn"><i class="bi bi-pencil me-1"></i>Chỉnh sửa</button><button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button></div>
-    </div>
-  </div>
-</div>
-
-<!-- SCANNER MODAL -->
-<div class="modal fade" id="scannerModal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="overflow:hidden;border-radius:12px">
-      <div class="modal-header"><h5 class="modal-title"><i class="bi bi-qr-code-scan me-2"></i>Scan Barcode / Serial</h5><button type="button" class="btn-close" data-bs-dismiss="modal" onclick="stopScanner()"></button></div>
-      <div class="modal-body p-0">
-        <video id="scannerVideo" autoplay playsinline muted></video>
-        <canvas id="scannerCanvas" style="display:none"></canvas>
-        <div id="scannerResult">Hướng camera vào barcode / serial number...</div>
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewModalTitle">Chi tiết thiết bị</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-      <div class="modal-footer"><button class="btn btn-secondary" onclick="stopScanner()" data-bs-dismiss="modal">Đóng</button><button class="btn btn-primary" onclick="useScanResult()"><i class="bi bi-check-lg me-1"></i>Dùng kết quả</button></div>
+      <div class="modal-body" id="viewModalBody"></div>
+      <div class="modal-footer">
+        <button class="btn btn-warning" id="viewEditBtn"><i class="bi bi-pencil me-1"></i>Chỉnh sửa</button>
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+      </div>
     </div>
   </div>
 </div>
 
-<div id="syncStatus"><div class="sync-dot" id="syncDot"></div><span id="syncText">Đồng bộ...</span></div>
+<!-- Toast -->
 <div id="toastContainer"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 <script>
-const CLIENT_ID='412100290103-tfpotji4l2gg88rci7qnkkqaajvjvbnf.apps.googleusercontent.com';
-const SHEET_ID='1a4Rsqw39e1rQq7_QpNDJubQGBdPDDHDOJciI2elSmAU';
-const SHEET_TAB='Devices';
-const SCOPE='https://www.googleapis.com/auth/spreadsheets';
-const HEADERS=['id','type','name','brand','serial','assetTag','status','location','assigned','ip','mac','hostname','vlan','purchaseDate','warrantyMonths','warrantyEnd','po','supplier','price','replacePrice','specs','notes'];
-const DEVICE_TYPES=['WiFi Access Point','Switch','Router','Firewall','Máy chiếu','Màn hình','TV','Camera IP','Camera CCTV','Server','NAS / Storage','MacBook','Windows Laptop','Mac Mini','Mini PC','Desktop PC','iPad / Tablet','Điện thoại','Ampli / DSP','Loa','Micro','Mixer','UPS','Máy in','Scanner','Máy photo','Access Control','Thiết bị khác'];
-const LIFECYCLE_YEARS={'WiFi Access Point':5,'Switch':7,'Router':5,'Firewall':5,'Máy chiếu':7,'Màn hình':6,'TV':7,'Camera IP':5,'Camera CCTV':5,'Server':5,'NAS / Storage':5,'MacBook':4,'Windows Laptop':4,'Mac Mini':5,'Mini PC':4,'Desktop PC':5,'iPad / Tablet':4,'Điện thoại':3,'Ampli / DSP':8,'Loa':10,'Micro':7,'Mixer':8,'UPS':4,'Máy in':5,'Scanner':5,'Máy photo':6,'Access Control':5,'Thiết bị khác':5};
+// ─── DATA ───────────────────────────────────────────────────────────────────
+const DEVICE_TYPES = [
+  'WiFi Access Point','Switch','Router','Firewall',
+  'Máy chiếu','Màn hình','TV','Camera IP','Camera CCTV',
+  'Server','NAS / Storage',
+  'MacBook','Windows Laptop','Mac Mini','Mini PC','Desktop PC',
+  'iPad / Tablet','Điện thoại',
+  'Ampli / DSP','Loa','Micro','Mixer',
+  'UPS','Máy in','Scanner','Máy photo',
+  'Access Control','Thiết bị khác'
+];
 
-let devices=[],editingId=null,accessToken=null,tokenClient=null;
-let chartType=null,chartStatus=null,chartYear=null;
-let scannerStream=null,scannerInterval=null,scannerTarget=null,lastScanResult='';
-
-window.onload=()=>{
-  populateTypeOptions();setupNav();
-  const t=setInterval(()=>{
-    if(window.google?.accounts?.oauth2){
-      clearInterval(t);
-      tokenClient=google.accounts.oauth2.initTokenClient({client_id:CLIENT_ID,scope:SCOPE,callback:onTokenReceived});
-    }
-  },100);
+const TYPE_BRANDS = {
+  'WiFi Access Point': ['Ruckus','Ubiquiti','Cisco','Aruba','TP-Link'],
+  'Switch': ['Ruckus','Cisco','HP','Ubiquiti','Netgear'],
+  'Máy chiếu': ['Epson','BenQ','Sony','Panasonic','ViewSonic'],
+  'Ampli / DSP': ['QSC','Crown','Yamaha','Denon'],
+  'MacBook': ['Apple'],
+  'Mac Mini': ['Apple'],
+  'iPad / Tablet': ['Apple','Samsung'],
+  'Loa': ['QSC','JBL','Bose','Yamaha'],
 };
 
-function signIn(){if(tokenClient)tokenClient.requestAccessToken();else toast('Google đang tải, thử lại','error');}
+const LIFECYCLE_YEARS = {
+  'WiFi Access Point': 5, 'Switch': 7, 'Router': 5, 'Firewall': 5,
+  'Máy chiếu': 7, 'Màn hình': 6, 'TV': 7, 'Camera IP': 5, 'Camera CCTV': 5,
+  'Server': 5, 'NAS / Storage': 5,
+  'MacBook': 4, 'Windows Laptop': 4, 'Mac Mini': 5, 'Mini PC': 4, 'Desktop PC': 5,
+  'iPad / Tablet': 4, 'Điện thoại': 3,
+  'Ampli / DSP': 8, 'Loa': 10, 'Micro': 7, 'Mixer': 8,
+  'UPS': 4, 'Máy in': 5, 'Scanner': 5, 'Máy photo': 6,
+  'Access Control': 5, 'Thiết bị khác': 5
+};
 
-function onTokenReceived(resp){
-  if(resp.error){toast('Đăng nhập thất bại','error');return;}
-  accessToken=resp.access_token;
-  fetch('https://www.googleapis.com/oauth2/v3/userinfo',{headers:{Authorization:`Bearer ${accessToken}`}})
-    .then(r=>r.json()).then(u=>{document.getElementById('userAvatar').src=u.picture||'';document.getElementById('userName').textContent=u.name||u.email;});
-  document.getElementById('loginScreen').style.display='none';
-  document.getElementById('sidebar').style.display='flex';
-  document.getElementById('main').style.display='block';
-  loadFromSheets();
+let devices = [];
+let editingId = null;
+let chartType = null, chartStatus = null, chartYear = null;
+
+// ─── STORAGE ─────────────────────────────────────────────────────────────────
+function save() { localStorage.setItem('iam_devices', JSON.stringify(devices)); }
+function load() {
+  try { devices = JSON.parse(localStorage.getItem('iam_devices') || '[]'); } catch(e) { devices = []; }
+  if (!devices.length) seedDemo();
 }
 
-function signOut(){
-  if(accessToken)google.accounts.oauth2.revoke(accessToken);
-  accessToken=null;devices=[];
-  document.getElementById('loginScreen').style.display='flex';
-  document.getElementById('sidebar').style.display='none';
-  document.getElementById('main').style.display='none';
+function seedDemo() {
+  const demo = [
+    { id:'D001', type:'WiFi Access Point', name:'Ruckus R750', brand:'Ruckus', serial:'R75023001', assetTag:'SSIS-IT-001', status:'Đang dùng', location:'Tầng 1 - Hành lang', assigned:'IT Dept', ip:'192.168.10.11', mac:'AA:BB:CC:01:02:03', hostname:'ap-floor1-01', vlan:'VLAN 10', purchaseDate:'2022-03-15', warrantyMonths:36, warrantyEnd:'2025-03-15', po:'PO2022-001', supplier:'Công ty ABC', price:18000000, replacePrice:22000000, specs:'802.11ax, 4x4 MU-MIMO', notes:'' },
+    { id:'D002', type:'Switch', name:'Ruckus ICX 7150-24', brand:'Ruckus', serial:'ICX23002', assetTag:'SSIS-IT-002', status:'Đang dùng', location:'Phòng Server', assigned:'IT Dept', ip:'192.168.1.2', mac:'', hostname:'sw-server-01', vlan:'', purchaseDate:'2021-08-20', warrantyMonths:60, warrantyEnd:'2026-08-20', po:'PO2021-005', supplier:'Công ty ABC', price:45000000, replacePrice:50000000, specs:'24-port Gigabit, PoE+', notes:'' },
+    { id:'D003', type:'Máy chiếu', name:'Epson EB-L200F', brand:'Epson', serial:'EP24003', assetTag:'SSIS-IT-010', status:'Đang dùng', location:'Phòng họp Tầng 2', assigned:'', ip:'', mac:'', hostname:'', vlan:'', purchaseDate:'2023-06-01', warrantyMonths:24, warrantyEnd:'2025-06-01', po:'PO2023-010', supplier:'Epson VN', price:32000000, replacePrice:35000000, specs:'4500 lumens, Full HD Laser', notes:'' },
+    { id:'D004', type:'Ampli / DSP', name:'QSC Q-SYS Core 110f', brand:'QSC', serial:'QSC24004', assetTag:'SSIS-IT-020', status:'Đang dùng', location:'Hội trường', assigned:'', ip:'192.168.20.5', mac:'', hostname:'qsc-core-hall', vlan:'VLAN 20', purchaseDate:'2022-11-10', warrantyMonths:36, warrantyEnd:'2025-11-10', po:'PO2022-015', supplier:'Audio VN', price:120000000, replacePrice:130000000, specs:'Q-SYS Core Processor', notes:'' },
+    { id:'D005', type:'MacBook', name:'MacBook Pro 14" M3', brand:'Apple', serial:'MBP25005', assetTag:'SSIS-IT-030', status:'Đang dùng', location:'Phòng IT', assigned:'Nguyen Van A', ip:'192.168.1.50', mac:'', hostname:'mbp-nguyen', vlan:'', purchaseDate:'2024-01-15', warrantyMonths:12, warrantyEnd:'2025-01-15', po:'PO2024-001', supplier:'Apple VN', price:52000000, replacePrice:55000000, specs:'M3, 16GB RAM, 512GB SSD, macOS 14', notes:'' },
+    { id:'D006', type:'Camera IP', name:'Hikvision DS-2CD2347G2', brand:'Hikvision', serial:'HIK23006', assetTag:'SSIS-IT-040', status:'Đang dùng', location:'Cổng vào', assigned:'', ip:'192.168.30.11', mac:'', hostname:'cam-gate-01', vlan:'VLAN 30', purchaseDate:'2021-05-20', warrantyMonths:36, warrantyEnd:'2024-05-20', po:'PO2021-008', supplier:'Hikvision VN', price:5500000, replacePrice:7000000, specs:'4MP, IR 60m, H.265+', notes:'' },
+    { id:'D007', type:'Server', name:'Dell PowerEdge R750', brand:'Dell', serial:'DEL22007', assetTag:'SSIS-IT-050', status:'Đang dùng', location:'Phòng Server', assigned:'IT Dept', ip:'192.168.1.10', mac:'', hostname:'srv-main-01', vlan:'', purchaseDate:'2022-07-01', warrantyMonths:60, warrantyEnd:'2027-07-01', po:'PO2022-020', supplier:'Dell VN', price:250000000, replacePrice:280000000, specs:'2x Xeon Gold, 256GB RAM, 8x 2TB SAS', notes:'VMware ESXi 8' },
+    { id:'D008', type:'iPad / Tablet', name:'iPad 10th Gen', brand:'Apple', serial:'IPD24008', assetTag:'SSIS-IT-060', status:'Đang dùng', location:'Thư viện', assigned:'Lib Staff', ip:'', mac:'', hostname:'', vlan:'', purchaseDate:'2023-10-01', warrantyMonths:12, warrantyEnd:'2024-10-01', po:'PO2023-025', supplier:'Apple VN', price:13000000, replacePrice:15000000, specs:'64GB WiFi, iPadOS 17', notes:'' },
+    { id:'D009', type:'TV', name:'Samsung QN85B 85"', brand:'Samsung', serial:'SAM22009', assetTag:'SSIS-IT-070', status:'Đang dùng', location:'Sảnh chính', assigned:'', ip:'192.168.1.80', mac:'', hostname:'tv-lobby-01', vlan:'', purchaseDate:'2022-09-10', warrantyMonths:24, warrantyEnd:'2024-09-10', po:'PO2022-022', supplier:'Samsung VN', price:38000000, replacePrice:40000000, specs:'85 inch 4K QLED', notes:'' },
+    { id:'D010', type:'Windows Laptop', name:'Dell Latitude 5540', brand:'Dell', serial:'LAT24010', assetTag:'SSIS-IT-080', status:'Sửa chữa', location:'Phòng hành chính', assigned:'Tran Thi B', ip:'', mac:'', hostname:'lat-tranb', vlan:'', purchaseDate:'2020-03-01', warrantyMonths:36, warrantyEnd:'2023-03-01', po:'PO2020-010', supplier:'Dell VN', price:22000000, replacePrice:28000000, specs:'i5-13th, 16GB, 512GB SSD, Win11', notes:'Đang sửa bàn phím' },
+  ];
+  devices = demo;
+  save();
 }
 
-async function apiGet(range){
-  const r=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(range)}`,{headers:{Authorization:`Bearer ${accessToken}`}});
-  if(!r.ok)throw new Error(await r.text());return r.json();
-}
-async function apiPut(range,values){
-  const r=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(range)}?valueInputOption=RAW`,{method:'PUT',headers:{Authorization:`Bearer ${accessToken}`,'Content-Type':'application/json'},body:JSON.stringify({values})});
-  if(!r.ok)throw new Error(await r.text());return r.json();
-}
-async function apiClear(range){
-  const r=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(range)}:clear`,{method:'POST',headers:{Authorization:`Bearer ${accessToken}`}});
-  if(!r.ok)throw new Error(await r.text());
-}
+// ─── INIT ────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  load();
+  populateTypeOptions();
+  setupNav();
+  renderAll();
+});
 
-async function loadFromSheets(){
-  setSyncStatus('syncing','Đang tải dữ liệu...');
-  try{
-    const data=await apiGet(`${SHEET_TAB}!A1:V5000`);
-    const rows=data.values||[];
-    if(rows.length===0){await apiPut(`${SHEET_TAB}!A1`,[HEADERS]);devices=[];}
-    else{const h=rows[0];devices=rows.slice(1).filter(r=>r[0]).map(r=>{const o={};h.forEach((k,i)=>o[k]=r[i]||'');return o;});}
-    setSyncStatus('ok',`Đã đồng bộ – ${devices.length} thiết bị`);
-    renderAll();
-  }catch(e){setSyncStatus('error','Lỗi tải dữ liệu');toast('Lỗi: '+e.message,'error');}
+function populateTypeOptions() {
+  const sel = document.getElementById('filterType');
+  const fSel = document.getElementById('f-type');
+  DEVICE_TYPES.forEach(t => {
+    sel.innerHTML += `<option>${t}</option>`;
+    fSel.innerHTML += `<option>${t}</option>`;
+  });
 }
 
-async function saveToSheets(){
-  setSyncStatus('syncing','Đang lưu...');
-  try{
-    await apiClear(`${SHEET_TAB}!A1:V5000`);
-    const rows=[HEADERS,...devices.map(d=>HEADERS.map(h=>d[h]||''))];
-    await apiPut(`${SHEET_TAB}!A1`,rows);
-    setSyncStatus('ok',`Đã lưu – ${devices.length} thiết bị`);
-  }catch(e){setSyncStatus('error','Lỗi lưu');toast('Lỗi lưu: '+e.message,'error');}
-}
-
-async function syncNow(){await loadFromSheets();}
-
-function setSyncStatus(state,text){
-  const el=document.getElementById('syncStatus'),dot=document.getElementById('syncDot'),txt=document.getElementById('syncText');
-  el.classList.add('show');dot.className='sync-dot '+state;txt.textContent=text;
-  if(state==='ok')setTimeout(()=>el.classList.remove('show'),3000);
-}
-
-function uid(){return 'D'+Date.now().toString(36).toUpperCase()+Math.random().toString(36).slice(2,5).toUpperCase();}
-function fmt(n){return n?Number(n).toLocaleString('vi-VN'):'—';}
-function fmtDate(d){if(!d)return'—';const[y,m,dd]=d.split('-');return`${dd}/${m}/${y}`;}
-function daysUntil(s){if(!s)return null;return Math.round((new Date(s)-new Date())/86400000);}
-function warrantyClass(s){const d=daysUntil(s);if(d===null)return'';if(d<0)return'w-expired';if(d<=30)return'w-critical';if(d<=90)return'w-warning';return'';}
-function statusBadge(s){const m={'Đang dùng':'s-active','Sửa chữa':'s-repair','Ngưng dùng':'s-inactive','Thanh lý':'s-retired'};return`<span class="badge-type ${m[s]||''}">${s}</span>`;}
-function toast(msg,type='success'){const el=document.createElement('div');el.className='toast-msg';el.style.borderLeft=`4px solid ${type==='success'?'#22c55e':'#ef4444'}`;el.textContent=msg;document.getElementById('toastContainer').appendChild(el);setTimeout(()=>el.remove(),3000);}
-
-// Scanner
-function openScanner(target){
-  scannerTarget=target||null;lastScanResult='';
-  document.getElementById('scannerResult').textContent='Hướng camera vào barcode / serial number...';
-  new bootstrap.Modal(document.getElementById('scannerModal')).show();
-  navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}})
-    .then(stream=>{
-      scannerStream=stream;
-      const v=document.getElementById('scannerVideo');v.srcObject=stream;v.play();
-      if('BarcodeDetector' in window){
-        const det=new BarcodeDetector({formats:['code_128','code_39','ean_13','qr_code','data_matrix','upc_a','pdf417']});
-        const canvas=document.getElementById('scannerCanvas'),ctx=canvas.getContext('2d');
-        scannerInterval=setInterval(async()=>{
-          if(v.readyState!==v.HAVE_ENOUGH_DATA)return;
-          canvas.width=v.videoWidth;canvas.height=v.videoHeight;ctx.drawImage(v,0,0);
-          try{const b=await det.detect(canvas);if(b.length>0){lastScanResult=b[0].rawValue;document.getElementById('scannerResult').textContent='✅ '+lastScanResult;if(scannerTarget==='serial'){document.getElementById('f-serial').value=lastScanResult;stopScanner();bootstrap.Modal.getInstance(document.getElementById('scannerModal')).hide();toast('Đã điền serial: '+lastScanResult);}}}catch(e){}
-        },300);
-      } else {document.getElementById('scannerResult').textContent='⚠️ Trình duyệt chưa hỗ trợ scan. Dùng Chrome trên Android/desktop.';}
-    })
-    .catch(()=>{document.getElementById('scannerResult').textContent='❌ Không thể truy cập camera. Kiểm tra quyền camera.';});
-}
-function stopScanner(){if(scannerInterval){clearInterval(scannerInterval);scannerInterval=null;}if(scannerStream){scannerStream.getTracks().forEach(t=>t.stop());scannerStream=null;}}
-function useScanResult(){if(!lastScanResult){toast('Chưa scan được gì','error');return;}if(scannerTarget==='serial')document.getElementById('f-serial').value=lastScanResult;else navigator.clipboard.writeText(lastScanResult);toast('✅ '+lastScanResult);stopScanner();bootstrap.Modal.getInstance(document.getElementById('scannerModal')).hide();}
-document.addEventListener('DOMContentLoaded',()=>{document.getElementById('scannerModal').addEventListener('hidden.bs.modal',stopScanner);});
-
-function populateTypeOptions(){const s=document.getElementById('filterType'),f=document.getElementById('f-type');DEVICE_TYPES.forEach(t=>{s.innerHTML+=`<option>${t}</option>`;f.innerHTML+=`<option>${t}</option>`;});}
-
-function setupNav(){
-  document.querySelectorAll('#sidebar nav a[data-page]').forEach(a=>{
-    a.addEventListener('click',e=>{
-      e.preventDefault();const page=a.dataset.page;
-      document.querySelectorAll('#sidebar nav a').forEach(x=>x.classList.remove('active'));a.classList.add('active');
-      document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+page).classList.add('active');
-      const titles={dashboard:'Dashboard',devices:'Quản lý thiết bị',warranty:'Theo dõi bảo hành',budget:'Ngân sách & Lifecycle',import:'Import / Export'};
-      document.getElementById('pageTitle').textContent=titles[page]||page;
-      if(page==='dashboard')renderDashboard();if(page==='devices')renderDevices();if(page==='warranty')renderWarranty();if(page==='budget')renderBudget();if(page==='import')renderImportStats();
+function setupNav() {
+  document.querySelectorAll('#sidebar nav a').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const page = a.dataset.page;
+      document.querySelectorAll('#sidebar nav a').forEach(x => x.classList.remove('active'));
+      a.classList.add('active');
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-' + page).classList.add('active');
+      const titles = { dashboard:'Dashboard', devices:'Quản lý thiết bị', warranty:'Theo dõi bảo hành', budget:'Ngân sách & Lifecycle', import:'Import / Export' };
+      document.getElementById('pageTitle').textContent = titles[page] || page;
+      if (page === 'dashboard') renderDashboard();
+      if (page === 'devices') renderDevices();
+      if (page === 'warranty') renderWarranty();
+      if (page === 'budget') renderBudget();
+      if (page === 'import') renderImportStats();
     });
   });
 }
 
-function renderAll(){renderDashboard();renderDevices();populateLocationFilter();}
+function renderAll() { renderDashboard(); renderDevices(); populateLocationFilter(); }
 
-function renderDashboard(){
-  const expired=devices.filter(d=>d.warrantyEnd&&daysUntil(d.warrantyEnd)<0);
-  const soon=devices.filter(d=>d.warrantyEnd&&daysUntil(d.warrantyEnd)>=0&&daysUntil(d.warrantyEnd)<=90);
-  const totalVal=devices.reduce((s,d)=>s+(Number(d.price)||0),0);
-  document.getElementById('stat-total').textContent=devices.length;
-  document.getElementById('stat-expired').textContent=expired.length;
-  document.getElementById('stat-soon').textContent=soon.length;
-  document.getElementById('stat-value').textContent=(totalVal/1e6).toFixed(1);
-  document.getElementById('deviceCount').textContent=devices.length+' thiết bị';
-  const alertD=[...expired,...soon].sort((a,b)=>daysUntil(a.warrantyEnd)-daysUntil(b.warrantyEnd));
-  document.getElementById('dashWarrantyTable').innerHTML=alertD.length?alertD.map(d=>{const days=daysUntil(d.warrantyEnd);const dt=days<0?`<span class="text-danger fw-bold">Đã hết ${Math.abs(days)}n</span>`:`<span class="text-warning fw-bold">Còn ${days}n</span>`;return`<tr class="${warrantyClass(d.warrantyEnd)}"><td><b>${d.name}</b></td><td>${d.type}</td><td>${d.serial||'—'}</td><td>${fmtDate(d.warrantyEnd)}</td><td>${dt}</td><td>${d.location||'—'}</td></tr>`;}).join(''):'<tr><td colspan="6" class="text-center text-success py-3">✅ Không có thiết bị nào sắp hết bảo hành</td></tr>';
+// ─── UTILS ───────────────────────────────────────────────────────────────────
+function uid() { return 'D' + Date.now().toString(36).toUpperCase(); }
+function fmt(n) { return n ? Number(n).toLocaleString('vi-VN') : '—'; }
+function fmtDate(d) { if (!d) return '—'; const [y,m,dd] = d.split('-'); return `${dd}/${m}/${y}`; }
+function daysUntil(dateStr) {
+  if (!dateStr) return null;
+  const diff = new Date(dateStr) - new Date();
+  return Math.round(diff / 86400000);
+}
+function warrantyClass(dateStr) {
+  const d = daysUntil(dateStr);
+  if (d === null) return '';
+  if (d < 0) return 'w-expired';
+  if (d <= 30) return 'w-critical';
+  if (d <= 90) return 'w-warning';
+  return '';
+}
+function statusBadge(s) {
+  const m = { 'Đang dùng':'s-active','Sửa chữa':'s-repair','Ngưng dùng':'s-inactive','Thanh lý':'s-retired' };
+  return `<span class="badge-type ${m[s]||''}">${s}</span>`;
+}
+function toast(msg, type='success') {
+  const el = document.createElement('div');
+  el.className = 'toast-msg';
+  el.style.borderLeft = `4px solid ${type==='success'?'#22c55e':'#ef4444'}`;
+  el.textContent = msg;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+// ─── DASHBOARD ───────────────────────────────────────────────────────────────
+function renderDashboard() {
+  const now = new Date();
+  const expired = devices.filter(d => d.warrantyEnd && daysUntil(d.warrantyEnd) < 0);
+  const soon = devices.filter(d => d.warrantyEnd && daysUntil(d.warrantyEnd) >= 0 && daysUntil(d.warrantyEnd) <= 90);
+  const totalVal = devices.reduce((s, d) => s + (Number(d.price) || 0), 0);
+
+  document.getElementById('stat-total').textContent = devices.length;
+  document.getElementById('stat-expired').textContent = expired.length;
+  document.getElementById('stat-soon').textContent = soon.length;
+  document.getElementById('stat-value').textContent = (totalVal / 1e6).toFixed(1);
+  document.getElementById('deviceCount').textContent = devices.length + ' thiết bị';
+
+  // Warranty table
+  const alertDevices = [...expired, ...soon].sort((a, b) => daysUntil(a.warrantyEnd) - daysUntil(b.warrantyEnd));
+  const tbody = document.getElementById('dashWarrantyTable');
+  tbody.innerHTML = alertDevices.length ? alertDevices.map(d => {
+    const days = daysUntil(d.warrantyEnd);
+    const daysText = days < 0 ? `<span class="text-danger fw-bold">Đã hết ${Math.abs(days)} ngày</span>` : `<span class="text-warning fw-bold">Còn ${days} ngày</span>`;
+    return `<tr class="${warrantyClass(d.warrantyEnd)}">
+      <td><b>${d.name}</b></td><td>${d.type}</td><td class="font-monospace">${d.serial||'—'}</td>
+      <td>${fmtDate(d.warrantyEnd)}</td><td>${daysText}</td><td>${d.location||'—'}</td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="6" class="text-center text-success py-3">✅ Không có thiết bị nào sắp hết hoặc đã hết bảo hành</td></tr>';
+
+  // Charts
   renderCharts();
 }
 
-function renderCharts(){
-  const tc={};devices.forEach(d=>{tc[d.type]=(tc[d.type]||0)+1;});
-  const tl=Object.keys(tc),pal=['#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#f97316','#84cc16','#ec4899','#6366f1','#14b8a6','#f43f5e'];
-  if(chartType)chartType.destroy();
-  chartType=new Chart(document.getElementById('chartByType'),{type:'doughnut',data:{labels:tl,datasets:[{data:tl.map(t=>tc[t]),backgroundColor:pal,borderWidth:2}]},options:{responsive:true,plugins:{legend:{position:'right',labels:{font:{size:11}}}}}});
-  const ss=['Đang dùng','Sửa chữa','Ngưng dùng','Thanh lý'];
-  if(chartStatus)chartStatus.destroy();
-  chartStatus=new Chart(document.getElementById('chartByStatus'),{type:'bar',data:{labels:ss,datasets:[{data:ss.map(s=>devices.filter(d=>d.status===s).length),backgroundColor:['#22c55e','#f59e0b','#94a3b8','#ef4444'],borderRadius:6}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}}}}});
+function renderCharts() {
+  // By type
+  const typeCounts = {};
+  devices.forEach(d => { typeCounts[d.type] = (typeCounts[d.type] || 0) + 1; });
+  const typeLabels = Object.keys(typeCounts);
+  const typeData = typeLabels.map(t => typeCounts[t]);
+  const palette = ['#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#f97316','#84cc16','#ec4899','#6366f1','#14b8a6','#f43f5e'];
+
+  if (chartType) chartType.destroy();
+  chartType = new Chart(document.getElementById('chartByType'), {
+    type: 'doughnut',
+    data: { labels: typeLabels, datasets: [{ data: typeData, backgroundColor: palette, borderWidth: 2 }] },
+    options: { responsive: true, plugins: { legend: { position: 'right', labels: { font: { size: 11 } } } } }
+  });
+
+  // By status
+  const statuses = ['Đang dùng','Sửa chữa','Ngưng dùng','Thanh lý'];
+  const statusData = statuses.map(s => devices.filter(d => d.status === s).length);
+  if (chartStatus) chartStatus.destroy();
+  chartStatus = new Chart(document.getElementById('chartByStatus'), {
+    type: 'bar',
+    data: { labels: statuses, datasets: [{ data: statusData, backgroundColor: ['#22c55e','#f59e0b','#94a3b8','#ef4444'], borderRadius: 6 }] },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+  });
 }
 
-function populateLocationFilter(){const locs=[...new Set(devices.map(d=>d.location).filter(Boolean))].sort();document.getElementById('filterLocation').innerHTML='<option value="">Tất cả vị trí</option>'+locs.map(l=>`<option>${l}</option>`).join('');}
-
-function getFiltered(){
-  const q=document.getElementById('searchInput').value.toLowerCase(),ft=document.getElementById('filterType').value,fs=document.getElementById('filterStatus').value,fl=document.getElementById('filterLocation').value;
-  return devices.filter(d=>{const m=!q||[d.name,d.type,d.serial,d.ip,d.location,d.assigned,d.assetTag,d.brand].some(v=>v&&v.toLowerCase().includes(q));return m&&(!ft||d.type===ft)&&(!fs||d.status===fs)&&(!fl||d.location===fl);});
+// ─── DEVICES ─────────────────────────────────────────────────────────────────
+function populateLocationFilter() {
+  const locs = [...new Set(devices.map(d => d.location).filter(Boolean))].sort();
+  const sel = document.getElementById('filterLocation');
+  sel.innerHTML = '<option value="">Tất cả vị trí</option>' + locs.map(l => `<option>${l}</option>`).join('');
 }
 
-function renderDevices(){
-  const data=getFiltered();
-  document.getElementById('deviceTable').innerHTML=data.map(d=>`<tr class="${warrantyClass(d.warrantyEnd)}" style="cursor:pointer" onclick="viewDevice('${d.id}')"><td class="text-muted" style="font-size:11px">${d.assetTag||d.id}</td><td><b>${d.name}</b><br><small class="text-muted">${d.brand||''}</small></td><td><span class="badge-type" style="background:#e0e7ff;color:#3730a3">${d.type}</span></td><td class="font-monospace" style="font-size:12px">${d.serial||'—'}</td><td class="font-monospace" style="font-size:12px">${d.ip||'—'}</td><td style="font-size:12px">${d.location||'—'}</td><td style="font-size:12px">${fmtDate(d.purchaseDate)}</td><td style="font-size:12px">${warrantyCell(d)}</td><td style="font-size:12px;white-space:nowrap">${fmt(d.price)}</td><td>${statusBadge(d.status)}</td><td onclick="event.stopPropagation()"><button class="btn btn-xs btn-outline-primary py-0 px-1 me-1" onclick="editDevice('${d.id}')"><i class="bi bi-pencil" style="font-size:12px"></i></button><button class="btn btn-xs btn-outline-danger py-0 px-1" onclick="deleteDevice('${d.id}')"><i class="bi bi-trash" style="font-size:12px"></i></button></td></tr>`).join('')||'<tr><td colspan="11" class="text-center text-muted py-4">Không tìm thấy thiết bị nào</td></tr>';
-  document.getElementById('tableFooter').textContent=`Hiển thị ${data.length} / ${devices.length} thiết bị`;
+function getFiltered() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const ft = document.getElementById('filterType').value;
+  const fs = document.getElementById('filterStatus').value;
+  const fl = document.getElementById('filterLocation').value;
+  return devices.filter(d => {
+    const match = !q || [d.name, d.type, d.serial, d.ip, d.location, d.assigned, d.assetTag, d.brand].some(v => v && v.toLowerCase().includes(q));
+    return match && (!ft || d.type === ft) && (!fs || d.status === fs) && (!fl || d.location === fl);
+  });
 }
 
-function warrantyCell(d){if(!d.warrantyEnd)return'—';const days=daysUntil(d.warrantyEnd);if(days<0)return`<span class="text-danger">${fmtDate(d.warrantyEnd)}<br><small>Hết ${Math.abs(days)}n</small></span>`;if(days<=30)return`<span class="text-danger fw-bold">${fmtDate(d.warrantyEnd)}<br><small>Còn ${days}n ⚠️</small></span>`;if(days<=90)return`<span class="text-warning">${fmtDate(d.warrantyEnd)}<br><small>Còn ${days}n</small></span>`;return`<span class="text-success">${fmtDate(d.warrantyEnd)}</span>`;}
-function clearFilters(){document.getElementById('searchInput').value='';document.getElementById('filterType').value='';document.getElementById('filterStatus').value='';document.getElementById('filterLocation').value='';renderDevices();}
+function renderDevices() {
+  const data = getFiltered();
+  const tbody = document.getElementById('deviceTable');
+  tbody.innerHTML = data.map((d, i) => {
+    const wc = warrantyClass(d.warrantyEnd);
+    return `<tr class="${wc}" style="cursor:pointer" onclick="viewDevice('${d.id}')">
+      <td class="text-muted" style="font-size:11px">${d.assetTag || d.id}</td>
+      <td><b>${d.name}</b><br><small class="text-muted">${d.brand || ''}</small></td>
+      <td><span class="badge-type" style="background:#e0e7ff;color:#3730a3">${d.type}</span></td>
+      <td class="font-monospace" style="font-size:12px">${d.serial||'—'}</td>
+      <td class="font-monospace" style="font-size:12px">${d.ip||'—'}</td>
+      <td style="font-size:12px">${d.location||'—'}</td>
+      <td style="font-size:12px">${fmtDate(d.purchaseDate)}</td>
+      <td style="font-size:12px">${warrantyCell(d)}</td>
+      <td style="font-size:12px;white-space:nowrap">${fmt(d.price)}</td>
+      <td>${statusBadge(d.status)}</td>
+      <td onclick="event.stopPropagation()">
+        <button class="btn btn-xs btn-outline-primary py-0 px-1 me-1" onclick="editDevice('${d.id}')" title="Sửa"><i class="bi bi-pencil" style="font-size:12px"></i></button>
+        <button class="btn btn-xs btn-outline-danger py-0 px-1" onclick="deleteDevice('${d.id}')" title="Xóa"><i class="bi bi-trash" style="font-size:12px"></i></button>
+      </td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="11" class="text-center text-muted py-4">Không tìm thấy thiết bị nào</td></tr>`;
+  document.getElementById('tableFooter').textContent = `Hiển thị ${data.length} / ${devices.length} thiết bị`;
+}
 
-function viewDevice(id){
-  const d=devices.find(x=>x.id===id);if(!d)return;
-  document.getElementById('viewModalTitle').textContent=d.name;
-  document.getElementById('viewEditBtn').onclick=()=>{bootstrap.Modal.getInstance(document.getElementById('viewModal')).hide();editDevice(id);};
-  const days=daysUntil(d.warrantyEnd);
-  const wS=days===null?'—':days<0?`<span class="text-danger">Đã hết hạn ${Math.abs(days)} ngày</span>`:days<=90?`<span class="text-warning">Còn ${days} ngày</span>`:`<span class="text-success">Còn ${days} ngày</span>`;
-  document.getElementById('viewModalBody').innerHTML=`<div class="row g-3">${r2('Loại',d.type,'Asset Tag',d.assetTag)}${r2('Tên',`<b>${d.name}</b>`,'Hãng',d.brand)}${r2('Serial',`<code>${d.serial||'—'}</code>`,'Trạng thái',statusBadge(d.status))}${r2('Vị trí',d.location,'Phụ trách',d.assigned)}<div class="col-12"><hr class="my-1"><small class="fw-bold text-muted">MẠNG</small></div>${r2('IP',`<code>${d.ip||'—'}</code>`,'MAC',`<code>${d.mac||'—'}</code>`)}${r2('Hostname',`<code>${d.hostname||'—'}</code>`,'VLAN',d.vlan)}<div class="col-12"><hr class="my-1"><small class="fw-bold text-muted">MUA SẮM & BẢO HÀNH</small></div>${r2('Ngày mua',fmtDate(d.purchaseDate),'Nhà cung cấp',d.supplier)}${r2('Giá mua',`<b>${fmt(d.price)} ₫</b>`,'Giá thay thế',fmt(d.replacePrice)+' ₫')}${r2('Bảo hành',(d.warrantyMonths||0)+' tháng','Hết BH',fmtDate(d.warrantyEnd))}<div class="col-12"><div class="p-2 rounded" style="background:#f8fafc">Tình trạng BH: ${wS}</div></div>${r2('Số PO',d.po,'Cấu hình',d.specs)}${d.notes?`<div class="col-12"><div class="alert alert-info py-2 mb-0"><b>Ghi chú:</b> ${d.notes}</div></div>`:''}</div>`;
+function warrantyCell(d) {
+  if (!d.warrantyEnd) return '—';
+  const days = daysUntil(d.warrantyEnd);
+  if (days < 0) return `<span class="text-danger">${fmtDate(d.warrantyEnd)}<br><small>Hết ${Math.abs(days)}n</small></span>`;
+  if (days <= 30) return `<span class="text-danger fw-bold">${fmtDate(d.warrantyEnd)}<br><small>Còn ${days}n ⚠️</small></span>`;
+  if (days <= 90) return `<span class="text-warning">${fmtDate(d.warrantyEnd)}<br><small>Còn ${days}n</small></span>`;
+  return `<span class="text-success">${fmtDate(d.warrantyEnd)}</span>`;
+}
+
+function clearFilters() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('filterType').value = '';
+  document.getElementById('filterStatus').value = '';
+  document.getElementById('filterLocation').value = '';
+  renderDevices();
+}
+
+// ─── VIEW ─────────────────────────────────────────────────────────────────────
+function viewDevice(id) {
+  const d = devices.find(x => x.id === id);
+  if (!d) return;
+  document.getElementById('viewModalTitle').textContent = d.name;
+  document.getElementById('viewEditBtn').onclick = () => { bootstrap.Modal.getInstance(document.getElementById('viewModal')).hide(); editDevice(id); };
+  const days = daysUntil(d.warrantyEnd);
+  const wStatus = days === null ? '—' : days < 0 ? `<span class="text-danger">Đã hết hạn ${Math.abs(days)} ngày trước</span>` : days <= 90 ? `<span class="text-warning">Còn ${days} ngày</span>` : `<span class="text-success">Còn ${days} ngày</span>`;
+  document.getElementById('viewModalBody').innerHTML = `
+    <div class="row g-3">
+      ${row2('Loại thiết bị', d.type, 'Asset Tag', d.assetTag)}
+      ${row2('Tên / Model', `<b>${d.name}</b>`, 'Hãng', d.brand)}
+      ${row2('Serial Number', `<code>${d.serial||'—'}</code>`, 'Trạng thái', statusBadge(d.status))}
+      ${row2('Vị trí', d.location, 'Phụ trách', d.assigned)}
+      <div class="col-12"><hr class="my-1"><small class="fw-bold text-muted">MẠNG</small></div>
+      ${row2('IP Address', `<code>${d.ip||'—'}</code>`, 'MAC', `<code>${d.mac||'—'}</code>`)}
+      ${row2('Hostname', `<code>${d.hostname||'—'}</code>`, 'VLAN', d.vlan)}
+      <div class="col-12"><hr class="my-1"><small class="fw-bold text-muted">MUA SẮM & BẢO HÀNH</small></div>
+      ${row2('Ngày mua', fmtDate(d.purchaseDate), 'Nhà cung cấp', d.supplier)}
+      ${row2('Giá mua', `<b>${fmt(d.price)} ₫</b>`, 'Giá thay thế dự kiến', fmt(d.replacePrice) + ' ₫')}
+      ${row2('Bảo hành', (d.warrantyMonths||0) + ' tháng', 'Hết bảo hành', fmtDate(d.warrantyEnd))}
+      <div class="col-12"><div class="p-2 rounded" style="background:#f8fafc">Tình trạng BH: ${wStatus}</div></div>
+      ${row2('Số PO', d.po, 'Cấu hình', d.specs)}
+      ${d.notes ? `<div class="col-12"><div class="alert alert-info py-2 mb-0"><b>Ghi chú:</b> ${d.notes}</div></div>` : ''}
+    </div>`;
   new bootstrap.Modal(document.getElementById('viewModal')).show();
 }
-function r2(l1,v1,l2,v2){return`<div class="col-md-6"><small class="text-muted">${l1}</small><div>${v1||'—'}</div></div><div class="col-md-6"><small class="text-muted">${l2}</small><div>${v2||'—'}</div></div>`;}
+function row2(l1, v1, l2, v2) {
+  return `<div class="col-md-6"><small class="text-muted">${l1}</small><div>${v1||'—'}</div></div><div class="col-md-6"><small class="text-muted">${l2}</small><div>${v2||'—'}</div></div>`;
+}
 
-function openAddModal(){editingId=null;document.getElementById('modalTitle').textContent='Thêm thiết bị mới';document.getElementById('deviceForm').reset();document.getElementById('f-warranty-end').value='';new bootstrap.Modal(document.getElementById('deviceModal')).show();}
-function editDevice(id){const d=devices.find(x=>x.id===id);if(!d)return;editingId=id;document.getElementById('modalTitle').textContent='Chỉnh sửa: '+d.name;const fm={type:'f-type',name:'f-name',brand:'f-brand',serial:'f-serial',assetTag:'f-asset-tag',status:'f-status',location:'f-location',assigned:'f-assigned',ip:'f-ip',mac:'f-mac',hostname:'f-hostname',vlan:'f-vlan',purchaseDate:'f-purchase-date',warrantyMonths:'f-warranty-months',warrantyEnd:'f-warranty-end',po:'f-po',supplier:'f-supplier',price:'f-price',replacePrice:'f-replace-price',specs:'f-specs',notes:'f-notes'};Object.entries(fm).forEach(([k,f])=>{const el=document.getElementById(f);if(el)el.value=d[k]||'';});new bootstrap.Modal(document.getElementById('deviceModal')).show();}
+// ─── CRUD ────────────────────────────────────────────────────────────────────
+function openAddModal() {
+  editingId = null;
+  document.getElementById('modalTitle').textContent = 'Thêm thiết bị mới';
+  document.getElementById('deviceForm').reset();
+  document.getElementById('f-warranty-end').value = '';
+  new bootstrap.Modal(document.getElementById('deviceModal')).show();
+}
 
-async function saveDevice(){
-  const form=document.getElementById('deviceForm');if(!form.checkValidity()){form.reportValidity();return;}
-  const g=id=>document.getElementById(id).value.trim();
-  const d={id:editingId||uid(),type:g('f-type'),name:g('f-name'),brand:g('f-brand'),serial:g('f-serial'),assetTag:g('f-asset-tag'),status:g('f-status'),location:g('f-location'),assigned:g('f-assigned'),ip:g('f-ip'),mac:g('f-mac'),hostname:g('f-hostname'),vlan:g('f-vlan'),purchaseDate:g('f-purchase-date'),warrantyMonths:g('f-warranty-months'),warrantyEnd:g('f-warranty-end'),po:g('f-po'),supplier:g('f-supplier'),price:g('f-price'),replacePrice:g('f-replace-price'),specs:g('f-specs'),notes:g('f-notes')};
-  if(editingId){const idx=devices.findIndex(x=>x.id===editingId);devices[idx]=d;toast('✅ Đã cập nhật');}else{devices.unshift(d);toast('✅ Đã thêm thiết bị mới');}
+function editDevice(id) {
+  const d = devices.find(x => x.id === id);
+  if (!d) return;
+  editingId = id;
+  document.getElementById('modalTitle').textContent = 'Chỉnh sửa: ' + d.name;
+  const fields = ['type','name','brand','serial','assetTag','status','location','assigned','ip','mac','hostname','vlan','purchaseDate','warrantyMonths','warrantyEnd','po','supplier','price','replacePrice','specs','notes'];
+  const fmap = { type:'f-type', name:'f-name', brand:'f-brand', serial:'f-serial', assetTag:'f-asset-tag', status:'f-status', location:'f-location', assigned:'f-assigned', ip:'f-ip', mac:'f-mac', hostname:'f-hostname', vlan:'f-vlan', purchaseDate:'f-purchase-date', warrantyMonths:'f-warranty-months', warrantyEnd:'f-warranty-end', po:'f-po', supplier:'f-supplier', price:'f-price', replacePrice:'f-replace-price', specs:'f-specs', notes:'f-notes' };
+  Object.entries(fmap).forEach(([key, fid]) => { const el = document.getElementById(fid); if(el) el.value = d[key] || ''; });
+  new bootstrap.Modal(document.getElementById('deviceModal')).show();
+}
+
+function saveDevice() {
+  const form = document.getElementById('deviceForm');
+  if (!form.checkValidity()) { form.reportValidity(); return; }
+  const get = id => document.getElementById(id).value.trim();
+  const d = {
+    id: editingId || uid(),
+    type: get('f-type'), name: get('f-name'), brand: get('f-brand'),
+    serial: get('f-serial'), assetTag: get('f-asset-tag'), status: get('f-status'),
+    location: get('f-location'), assigned: get('f-assigned'),
+    ip: get('f-ip'), mac: get('f-mac'), hostname: get('f-hostname'), vlan: get('f-vlan'),
+    purchaseDate: get('f-purchase-date'), warrantyMonths: get('f-warranty-months'),
+    warrantyEnd: get('f-warranty-end'), po: get('f-po'), supplier: get('f-supplier'),
+    price: get('f-price'), replacePrice: get('f-replace-price'),
+    specs: get('f-specs'), notes: get('f-notes'),
+  };
+  if (editingId) {
+    const idx = devices.findIndex(x => x.id === editingId);
+    devices[idx] = d;
+    toast('✅ Đã cập nhật thiết bị');
+  } else {
+    devices.unshift(d);
+    toast('✅ Đã thêm thiết bị mới');
+  }
+  save(); populateLocationFilter(); renderDevices(); renderDashboard();
   bootstrap.Modal.getInstance(document.getElementById('deviceModal')).hide();
-  populateLocationFilter();renderDevices();renderDashboard();
-  await saveToSheets();
 }
 
-async function deleteDevice(id){
-  const d=devices.find(x=>x.id===id);if(!confirm(`Xóa "${d?.name}"?`))return;
-  devices=devices.filter(x=>x.id!==id);populateLocationFilter();renderDevices();renderDashboard();toast('🗑️ Đã xóa','error');
-  await saveToSheets();
+function deleteDevice(id) {
+  const d = devices.find(x => x.id === id);
+  if (!confirm(`Xóa "${d?.name}"? Không thể hoàn tác.`)) return;
+  devices = devices.filter(x => x.id !== id);
+  save(); populateLocationFilter(); renderDevices(); renderDashboard();
+  toast('🗑️ Đã xóa thiết bị', 'error');
 }
 
-function calcWarranty(){const pd=document.getElementById('f-purchase-date').value,wm=parseInt(document.getElementById('f-warranty-months').value)||0;if(pd&&wm){const d=new Date(pd);d.setMonth(d.getMonth()+wm);document.getElementById('f-warranty-end').value=d.toISOString().split('T')[0];}}
-function onTypeChange(){const t=document.getElementById('f-type').value;const b={'WiFi Access Point':'Ruckus','Switch':'Ruckus','Máy chiếu':'Epson','Ampli / DSP':'QSC','MacBook':'Apple','Mac Mini':'Apple','iPad / Tablet':'Apple','Loa':'QSC'};if(b[t])document.getElementById('f-brand').value=b[t];const lc=LIFECYCLE_YEARS[t];if(lc&&!document.getElementById('f-warranty-months').value){document.getElementById('f-warranty-months').value=Math.min(lc*12,60);calcWarranty();}}
-
-function renderWarranty(){
-  const filter=document.getElementById('warrantyFilter').value;
-  let data=[...devices].sort((a,b)=>(daysUntil(a.warrantyEnd)||9999)-(daysUntil(b.warrantyEnd)||9999));
-  if(filter==='expired')data=data.filter(d=>d.warrantyEnd&&daysUntil(d.warrantyEnd)<0);
-  else if(filter==='30')data=data.filter(d=>d.warrantyEnd&&daysUntil(d.warrantyEnd)>=0&&daysUntil(d.warrantyEnd)<=30);
-  else if(filter==='90')data=data.filter(d=>d.warrantyEnd&&daysUntil(d.warrantyEnd)>=0&&daysUntil(d.warrantyEnd)<=90);
-  else if(filter==='180')data=data.filter(d=>d.warrantyEnd&&daysUntil(d.warrantyEnd)>=0&&daysUntil(d.warrantyEnd)<=180);
-  else if(filter==='ok')data=data.filter(d=>!d.warrantyEnd||daysUntil(d.warrantyEnd)>180);
-  document.getElementById('warrantyList').innerHTML=data.length?data.map(d=>{const days=d.warrantyEnd?daysUntil(d.warrantyEnd):null;let cls,icon,txt;if(days===null){cls='wb-ok';icon='❓';txt='Không có thông tin BH';}else if(days<0){cls='wb-expired';icon='🔴';txt=`Đã hết hạn ${Math.abs(days)} ngày trước`;}else if(days<=30){cls='wb-critical';icon='🟠';txt=`Còn ${days} ngày – Cần gia hạn ngay!`;}else if(days<=90){cls='wb-warning';icon='🟡';txt=`Còn ${days} ngày`;}else{cls='wb-ok';icon='🟢';txt=`Còn ${days} ngày`;}return`<div class="warranty-band ${cls}"><span style="font-size:20px">${icon}</span><div class="flex-grow-1"><b>${d.name}</b> <span class="text-muted ms-2" style="font-size:12px">${d.type} · ${d.serial||'—'} · ${d.location||'—'}</span><div style="font-size:12px">Ngày mua: <b>${fmtDate(d.purchaseDate)}</b> → Hết BH: <b>${fmtDate(d.warrantyEnd)}</b></div></div><div class="text-end" style="min-width:160px;font-size:13px"><b>${txt}</b></div><button class="btn btn-sm btn-outline-secondary py-0" onclick="editDevice('${d.id}')"><i class="bi bi-pencil"></i></button></div>`;}).join(''):'<div class="text-center text-muted py-4">Không có thiết bị nào</div>';
+function calcWarranty() {
+  const pd = document.getElementById('f-purchase-date').value;
+  const wm = parseInt(document.getElementById('f-warranty-months').value) || 0;
+  if (pd && wm) {
+    const d = new Date(pd);
+    d.setMonth(d.getMonth() + wm);
+    document.getElementById('f-warranty-end').value = d.toISOString().split('T')[0];
+  }
 }
 
-function renderBudget(){
-  const now=new Date();const ao=d=>d.purchaseDate?(now-new Date(d.purchaseDate))/(365.25*86400000):0;const ma=d=>LIFECYCLE_YEARS[d.type]||5;
-  const tv=devices.reduce((s,d)=>s+(Number(d.price)||0),0);
-  document.getElementById('bud-total-val').textContent=fmt(tv);
-  document.getElementById('bud-old').textContent=devices.filter(d=>ao(d)>=ma(d)).length;
-  document.getElementById('bud-mid').textContent=devices.filter(d=>{const a=ao(d),m=ma(d);return a>=m*0.6&&a<m;}).length;
-  const yt={};devices.forEach(d=>{if(d.purchaseDate){const y=d.purchaseDate.split('-')[0];yt[y]=(yt[y]||0)+(Number(d.price)||0);}});
-  const years=Object.keys(yt).sort();
-  if(chartYear)chartYear.destroy();
-  chartYear=new Chart(document.getElementById('chartByYear'),{type:'bar',data:{labels:years,datasets:[{label:'Giá trị mua (₫)',data:years.map(y=>yt[y]),backgroundColor:'#3b82f6',borderRadius:6}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>(v/1e6).toFixed(0)+'tr'}}}}});
-  const sorted=[...devices].sort((a,b)=>ao(b)-ao(a));
-  document.getElementById('lifecycleTable').innerHTML=sorted.map(d=>{
-    const age=ao(d).toFixed(1),maxA=ma(d),pct=Math.min(100,(ao(d)/maxA)*100);
-    let cls='',lcText='',ry='—';
-    if(ao(d)>=maxA){cls='lc-row-old';lcText='<span class="text-danger fw-bold">⚠️ Quá hạn thay thế</span>';ry='Ngay bây giờ';}
-    else if(ao(d)>=maxA*0.6){cls='lc-row-mid';lcText='<span class="text-warning">🟡 Cần theo dõi</span>';ry=String(now.getFullYear()+Math.ceil(maxA-ao(d)));}
-    else{lcText='<span class="text-success">🟢 Tốt</span>';ry=String(now.getFullYear()+Math.round(maxA-ao(d)));}
-    return`<tr class="${cls}"><td><b>${d.name}</b></td><td><small>${d.type}</small></td><td>${fmtDate(d.purchaseDate)}</td><td>${age}/${maxA}n<div class="progress mt-1" style="height:4px"><div class="progress-bar ${pct>=100?'bg-danger':pct>=60?'bg-warning':'bg-success'}" style="width:${pct}%"></div></div></td><td>${fmt(d.price)}</td><td>${lcText}</td><td>${ry}</td></tr>`;
+function onTypeChange() {
+  const t = document.getElementById('f-type').value;
+  if (TYPE_BRANDS[t]) document.getElementById('f-brand').value = TYPE_BRANDS[t][0];
+  const lc = LIFECYCLE_YEARS[t];
+  if (lc && !document.getElementById('f-warranty-months').value) {
+    document.getElementById('f-warranty-months').value = Math.min(lc * 12, 60);
+    calcWarranty();
+  }
+}
+
+// ─── WARRANTY PAGE ────────────────────────────────────────────────────────────
+function renderWarranty() {
+  const filter = document.getElementById('warrantyFilter').value;
+  let data = [...devices].sort((a, b) => {
+    const da = a.warrantyEnd ? daysUntil(a.warrantyEnd) : 9999;
+    const db = b.warrantyEnd ? daysUntil(b.warrantyEnd) : 9999;
+    return da - db;
+  });
+  if (filter === 'expired') data = data.filter(d => d.warrantyEnd && daysUntil(d.warrantyEnd) < 0);
+  else if (filter === '30') data = data.filter(d => d.warrantyEnd && daysUntil(d.warrantyEnd) >= 0 && daysUntil(d.warrantyEnd) <= 30);
+  else if (filter === '90') data = data.filter(d => d.warrantyEnd && daysUntil(d.warrantyEnd) >= 0 && daysUntil(d.warrantyEnd) <= 90);
+  else if (filter === '180') data = data.filter(d => d.warrantyEnd && daysUntil(d.warrantyEnd) >= 0 && daysUntil(d.warrantyEnd) <= 180);
+  else if (filter === 'ok') data = data.filter(d => !d.warrantyEnd || daysUntil(d.warrantyEnd) > 180);
+
+  const el = document.getElementById('warrantyList');
+  el.innerHTML = data.length ? data.map(d => {
+    const days = d.warrantyEnd ? daysUntil(d.warrantyEnd) : null;
+    let cls, icon, txt;
+    if (days === null) { cls='wb-ok'; icon='❓'; txt='Không có thông tin bảo hành'; }
+    else if (days < 0) { cls='wb-expired'; icon='🔴'; txt=`Đã hết hạn ${Math.abs(days)} ngày trước`; }
+    else if (days <= 30) { cls='wb-critical'; icon='🟠'; txt=`Còn ${days} ngày – Cần gia hạn ngay!`; }
+    else if (days <= 90) { cls='wb-warning'; icon='🟡'; txt=`Còn ${days} ngày`; }
+    else { cls='wb-ok'; icon='🟢'; txt=`Còn ${days} ngày`; }
+    return `<div class="warranty-band ${cls}">
+      <span style="font-size:20px">${icon}</span>
+      <div class="flex-grow-1">
+        <b>${d.name}</b> <span class="text-muted ms-2" style="font-size:12px">${d.type} · ${d.serial||'—'} · ${d.location||'—'}</span>
+        <div style="font-size:12px">Ngày mua: <b>${fmtDate(d.purchaseDate)}</b> → Hết BH: <b>${fmtDate(d.warrantyEnd)}</b></div>
+      </div>
+      <div class="text-end" style="min-width:160px; font-size:13px"><b>${txt}</b></div>
+      <button class="btn btn-sm btn-outline-secondary py-0" onclick="editDevice('${d.id}')"><i class="bi bi-pencil"></i></button>
+    </div>`;
+  }).join('') : '<div class="text-center text-muted py-4">Không có thiết bị nào</div>';
+}
+
+// ─── BUDGET / LIFECYCLE ───────────────────────────────────────────────────────
+function renderBudget() {
+  const now = new Date();
+  const totalVal = devices.reduce((s, d) => s + (Number(d.price) || 0), 0);
+  const ageOf = d => d.purchaseDate ? (now - new Date(d.purchaseDate)) / (365.25 * 86400000) : 0;
+  const maxAge = d => LIFECYCLE_YEARS[d.type] || 5;
+  const old = devices.filter(d => ageOf(d) >= maxAge(d));
+  const mid = devices.filter(d => { const a = ageOf(d); const m = maxAge(d); return a >= m * 0.6 && a < m; });
+
+  document.getElementById('bud-total-val').textContent = fmt(totalVal);
+  document.getElementById('bud-old').textContent = old.length;
+  document.getElementById('bud-mid').textContent = mid.length;
+
+  // Chart by year
+  const yearTotals = {};
+  devices.forEach(d => {
+    if (d.purchaseDate) {
+      const y = d.purchaseDate.split('-')[0];
+      yearTotals[y] = (yearTotals[y] || 0) + (Number(d.price) || 0);
+    }
+  });
+  const years = Object.keys(yearTotals).sort();
+  if (chartYear) chartYear.destroy();
+  chartYear = new Chart(document.getElementById('chartByYear'), {
+    type: 'bar',
+    data: { labels: years, datasets: [{ label: 'Giá trị mua (₫)', data: years.map(y => yearTotals[y]), backgroundColor: '#3b82f6', borderRadius: 6 }] },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => (v/1e6).toFixed(0) + 'tr' } } } }
+  });
+
+  // Lifecycle table
+  const sorted = [...devices].sort((a, b) => ageOf(b) - ageOf(a));
+  const tbody = document.getElementById('lifecycleTable');
+  tbody.innerHTML = sorted.map(d => {
+    const age = ageOf(d).toFixed(1);
+    const maxA = maxAge(d);
+    const pct = Math.min(100, (ageOf(d) / maxA) * 100);
+    let cls = '', lcText = '', replaceYear = '—';
+    if (ageOf(d) >= maxA) { cls='lc-row-old'; lcText='<span class="text-danger fw-bold">⚠️ Quá hạn thay thế</span>'; replaceYear='Ngay bây giờ'; }
+    else if (ageOf(d) >= maxA * 0.6) { cls='lc-row-mid'; lcText='<span class="text-warning">🟡 Cần theo dõi</span>'; replaceYear = String(now.getFullYear() + Math.ceil(maxA - ageOf(d))); }
+    else { lcText='<span class="text-success">🟢 Tốt</span>'; replaceYear = String(now.getFullYear() + Math.round(maxA - ageOf(d))); }
+    return `<tr class="${cls}">
+      <td><b>${d.name}</b></td>
+      <td><small>${d.type}</small></td>
+      <td>${fmtDate(d.purchaseDate)}</td>
+      <td>${age} / ${maxA} năm<div class="progress mt-1" style="height:4px"><div class="progress-bar ${pct>=100?'bg-danger':pct>=60?'bg-warning':'bg-success'}" style="width:${pct}%"></div></div></td>
+      <td>${fmt(d.price)}</td>
+      <td>${lcText}</td>
+      <td>${replaceYear}</td>
+    </tr>`;
   }).join('');
 }
 
-function exportExcel(){const rows=devices.map(d=>({'Asset Tag':d.assetTag,'Loại':d.type,'Tên':d.name,'Hãng':d.brand,'Serial':d.serial,'Trạng thái':d.status,'Vị trí':d.location,'Phụ trách':d.assigned,'IP':d.ip,'MAC':d.mac,'Hostname':d.hostname,'VLAN':d.vlan,'Ngày mua':d.purchaseDate,'BH (tháng)':d.warrantyMonths,'Hết BH':d.warrantyEnd,'Nhà cung cấp':d.supplier,'PO':d.po,'Giá (VND)':d.price,'Giá thay thế':d.replacePrice,'Cấu hình':d.specs,'Ghi chú':d.notes}));const ws=XLSX.utils.json_to_sheet(rows);const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'IT Assets');XLSX.writeFile(wb,`IT-Assets-${new Date().toISOString().split('T')[0]}.xlsx`);toast('✅ Đã xuất Excel');}
-function exportBudgetExcel(){const now=new Date();const ao=d=>d.purchaseDate?(now-new Date(d.purchaseDate))/(365.25*86400000):0;const ma=d=>LIFECYCLE_YEARS[d.type]||5;const rows=[...devices].sort((a,b)=>ao(b)-ao(a)).map(d=>{const age=ao(d),mx=ma(d);return{'Asset Tag':d.assetTag,'Tên':d.name,'Loại':d.type,'Vị trí':d.location,'Ngày mua':d.purchaseDate,'Tuổi (năm)':age.toFixed(1),'Lifecycle (năm)':mx,'Giá gốc':d.price,'Giá thay dự kiến':d.replacePrice||d.price,'Dự kiến thay năm':age>=mx?now.getFullYear():now.getFullYear()+Math.ceil(mx-age),'Tình trạng':age>=mx?'Quá hạn':age>=mx*0.6?'Cần theo dõi':'Tốt'};});const ws=XLSX.utils.json_to_sheet(rows);const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Lifecycle');XLSX.writeFile(wb,`IT-Budget-${new Date().getFullYear()}.xlsx`);toast('✅ Đã xuất ngân sách');}
-function exportPDF(){const win=window.open('','_blank');const rows=devices.map(d=>`<tr><td>${d.assetTag||''}</td><td>${d.type}</td><td>${d.name}</td><td>${d.serial||''}</td><td>${d.ip||''}</td><td>${d.location||''}</td><td>${fmtDate(d.purchaseDate)}</td><td>${fmtDate(d.warrantyEnd)}</td><td>${d.status}</td></tr>`).join('');win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>IT Assets</title><style>body{font-family:Arial;font-size:11px;margin:20px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ddd;padding:4px 6px}th{background:#1e293b;color:#fff}@media print{@page{size:A4 landscape}}</style></head><body><h2>IT Assets – SSIS – ${new Date().toLocaleDateString('vi-VN')}</h2><table><thead><tr><th>Asset Tag</th><th>Loại</th><th>Tên</th><th>S/N</th><th>IP</th><th>Vị trí</th><th>Ngày mua</th><th>Hết BH</th><th>Trạng thái</th></tr></thead><tbody>${rows}</tbody></table></body></html>`);win.document.close();setTimeout(()=>win.print(),500);}
-function downloadTemplate(){const ws=XLSX.utils.json_to_sheet([{'Asset Tag':'SSIS-IT-001','Loại':'WiFi Access Point','Tên / Model':'Ruckus R750','Hãng':'Ruckus','Serial Number':'SN12345','Trạng thái':'Đang dùng','Vị trí':'Phòng IT','Phụ trách':'IT Dept','IP':'192.168.1.1','MAC':'','Hostname':'ap-01','VLAN':'VLAN10','Ngày mua':'2023-01-15','BH (tháng)':36,'Hết BH':'2026-01-15','Nhà cung cấp':'Công ty ABC','Số PO':'PO2023-001','Giá mua (VND)':18000000,'Giá thay thế':22000000,'Cấu hình':'802.11ax','Ghi chú':''}]);const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Template');XLSX.writeFile(wb,'IT-Assets-Template.xlsx');}
-async function importExcel(input){const file=input.files[0];if(!file)return;const reader=new FileReader();reader.onload=async e=>{try{const wb=XLSX.read(e.target.result,{type:'array'});const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);let added=0;rows.forEach(r=>{if(!r['Tên / Model'])return;devices.push({id:uid(),assetTag:r['Asset Tag']||'',type:r['Loại']||'Thiết bị khác',name:r['Tên / Model']||'',brand:r['Hãng']||'',serial:r['Serial Number']||'',status:r['Trạng thái']||'Đang dùng',location:r['Vị trí']||'',assigned:r['Phụ trách']||'',ip:r['IP']||'',mac:r['MAC']||'',hostname:r['Hostname']||'',vlan:r['VLAN']||'',purchaseDate:r['Ngày mua']||'',warrantyMonths:r['BH (tháng)']||0,warrantyEnd:r['Hết BH']||'',supplier:r['Nhà cung cấp']||'',po:r['Số PO']||'',price:r['Giá mua (VND)']||0,replacePrice:r['Giá thay thế']||0,specs:r['Cấu hình']||'',notes:r['Ghi chú']||''});added++;});renderAll();toast(`✅ Đã import ${added} thiết bị`);await saveToSheets();}catch(err){toast('Lỗi: '+err.message,'error');}};reader.readAsArrayBuffer(file);input.value='';}
-function renderImportStats(){const tv=devices.reduce((s,d)=>s+(Number(d.price)||0),0);const exp=devices.filter(d=>d.warrantyEnd&&daysUntil(d.warrantyEnd)<0).length;document.getElementById('importStats').innerHTML=`Tổng: <b>${devices.length}</b> thiết bị &nbsp;|&nbsp; Giá trị: <b>${fmt(tv)} ₫</b> &nbsp;|&nbsp; Hết BH: <b class="text-danger">${exp}</b> &nbsp;|&nbsp; Loại: <b>${new Set(devices.map(d=>d.type)).size}</b>`;}
+// ─── EXPORT ───────────────────────────────────────────────────────────────────
+function exportExcel() {
+  const rows = devices.map(d => ({
+    'Asset Tag': d.assetTag, 'Loại': d.type, 'Tên / Model': d.name, 'Hãng': d.brand,
+    'Serial Number': d.serial, 'Trạng thái': d.status, 'Vị trí': d.location, 'Phụ trách': d.assigned,
+    'IP': d.ip, 'MAC': d.mac, 'Hostname': d.hostname, 'VLAN': d.vlan,
+    'Ngày mua': d.purchaseDate, 'BH (tháng)': d.warrantyMonths, 'Hết BH': d.warrantyEnd,
+    'Nhà cung cấp': d.supplier, 'Số PO': d.po, 'Giá mua (VND)': d.price,
+    'Giá thay thế': d.replacePrice, 'Cấu hình': d.specs, 'Ghi chú': d.notes
+  }));
+  const ws = XLSX.utils.json_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'IT Assets');
+  // Auto column width
+  const cols = Object.keys(rows[0] || {}).map(k => ({ wch: Math.max(k.length, 12) }));
+  ws['!cols'] = cols;
+  XLSX.writeFile(wb, `IT-Assets-${new Date().toISOString().split('T')[0]}.xlsx`);
+  toast('✅ Đã xuất Excel');
+}
+
+function exportBudgetExcel() {
+  const now = new Date();
+  const ageOf = d => d.purchaseDate ? (now - new Date(d.purchaseDate)) / (365.25 * 86400000) : 0;
+  const maxAge = d => LIFECYCLE_YEARS[d.type] || 5;
+  const rows = [...devices].sort((a, b) => ageOf(b) - ageOf(a)).map(d => {
+    const age = ageOf(d);
+    const max = maxAge(d);
+    const replaceIn = Math.max(0, max - age);
+    return {
+      'Asset Tag': d.assetTag, 'Tên': d.name, 'Loại': d.type, 'Vị trí': d.location,
+      'Ngày mua': d.purchaseDate, 'Tuổi (năm)': age.toFixed(1),
+      'Lifecycle (năm)': max, 'Giá gốc (VND)': d.price,
+      'Giá thay dự kiến (VND)': d.replacePrice || d.price,
+      'Dự kiến thay năm': age >= max ? now.getFullYear() : now.getFullYear() + Math.ceil(replaceIn),
+      'Tình trạng': age >= max ? 'Quá hạn' : age >= max * 0.6 ? 'Cần theo dõi' : 'Tốt'
+    };
+  });
+  const ws = XLSX.utils.json_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Lifecycle Budget');
+  XLSX.writeFile(wb, `IT-Budget-${now.getFullYear()}.xlsx`);
+  toast('✅ Đã xuất ngân sách Excel');
+}
+
+function exportPDF() {
+  const win = window.open('', '_blank');
+  const rows = devices.map(d => `<tr>
+    <td>${d.assetTag||''}</td><td>${d.type}</td><td>${d.name}</td><td>${d.serial||''}</td>
+    <td>${d.ip||''}</td><td>${d.location||''}</td><td>${fmtDate(d.purchaseDate)}</td>
+    <td>${fmtDate(d.warrantyEnd)}</td><td>${d.status}</td>
+  </tr>`).join('');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+    <title>IT Assets – SSIS</title>
+    <style>body{font-family:Arial;font-size:11px;margin:20px}h2{margin-bottom:6px}
+    table{width:100%;border-collapse:collapse}th,td{border:1px solid #ddd;padding:4px 6px;text-align:left}
+    th{background:#1e293b;color:#fff}tr:nth-child(even){background:#f8fafc}
+    @media print{@page{size:A4 landscape}}</style>
+    </head><body>
+    <h2>📋 Danh sách thiết bị IT – SSIS</h2>
+    <p>Ngày xuất: ${new Date().toLocaleDateString('vi-VN')} | Tổng: ${devices.length} thiết bị</p>
+    <table><thead><tr><th>Asset Tag</th><th>Loại</th><th>Tên/Model</th><th>S/N</th><th>IP</th><th>Vị trí</th><th>Ngày mua</th><th>Hết BH</th><th>Trạng thái</th></tr></thead>
+    <tbody>${rows}</tbody></table></body></html>`);
+  win.document.close();
+  setTimeout(() => win.print(), 500);
+}
+
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(devices, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `IT-Assets-backup-${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  toast('✅ Đã sao lưu JSON');
+}
+
+function downloadTemplate() {
+  const template = [{
+    'Asset Tag':'SSIS-IT-001','Loại':'WiFi Access Point','Tên / Model':'Ruckus R750','Hãng':'Ruckus',
+    'Serial Number':'SN12345','Trạng thái':'Đang dùng','Vị trí':'Phòng IT','Phụ trách':'IT Dept',
+    'IP':'192.168.1.1','MAC':'AA:BB:CC:DD:EE:FF','Hostname':'ap-01','VLAN':'VLAN10',
+    'Ngày mua':'2023-01-15','BH (tháng)':36,'Hết BH':'2026-01-15',
+    'Nhà cung cấp':'Công ty ABC','Số PO':'PO2023-001','Giá mua (VND)':18000000,
+    'Giá thay thế':22000000,'Cấu hình':'802.11ax','Ghi chú':''
+  }];
+  const ws = XLSX.utils.json_to_sheet(template);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Template');
+  XLSX.writeFile(wb, 'IT-Assets-Template.xlsx');
+  toast('✅ Đã tải template');
+}
+
+function importExcel(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const wb = XLSX.read(e.target.result, { type: 'array' });
+      const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+      let added = 0;
+      rows.forEach(r => {
+        if (!r['Tên / Model']) return;
+        devices.push({
+          id: uid(), assetTag: r['Asset Tag']||'', type: r['Loại']||'Thiết bị khác',
+          name: r['Tên / Model']||'', brand: r['Hãng']||'', serial: r['Serial Number']||'',
+          status: r['Trạng thái']||'Đang dùng', location: r['Vị trí']||'', assigned: r['Phụ trách']||'',
+          ip: r['IP']||'', mac: r['MAC']||'', hostname: r['Hostname']||'', vlan: r['VLAN']||'',
+          purchaseDate: r['Ngày mua']||'', warrantyMonths: r['BH (tháng)']||0, warrantyEnd: r['Hết BH']||'',
+          supplier: r['Nhà cung cấp']||'', po: r['Số PO']||'', price: r['Giá mua (VND)']||0,
+          replacePrice: r['Giá thay thế']||0, specs: r['Cấu hình']||'', notes: r['Ghi chú']||''
+        });
+        added++;
+      });
+      save(); renderAll(); renderImportStats();
+      toast(`✅ Đã import ${added} thiết bị`);
+    } catch(err) { toast('❌ Lỗi đọc file: ' + err.message, 'error'); }
+  };
+  reader.readAsArrayBuffer(file);
+  input.value = '';
+}
+
+function importJSON(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!Array.isArray(data)) throw new Error('Định dạng không hợp lệ');
+      if (!confirm(`Khôi phục sẽ THAY THẾ toàn bộ ${devices.length} thiết bị hiện tại bằng ${data.length} thiết bị từ backup. Tiếp tục?`)) return;
+      devices = data;
+      save(); renderAll(); renderImportStats();
+      toast(`✅ Đã khôi phục ${data.length} thiết bị`);
+    } catch(err) { toast('❌ Lỗi: ' + err.message, 'error'); }
+  };
+  reader.readAsText(file);
+  input.value = '';
+}
+
+function renderImportStats() {
+  const totalVal = devices.reduce((s, d) => s + (Number(d.price) || 0), 0);
+  const expired = devices.filter(d => d.warrantyEnd && daysUntil(d.warrantyEnd) < 0).length;
+  document.getElementById('importStats').innerHTML = `
+    Tổng thiết bị: <b>${devices.length}</b> &nbsp;|&nbsp;
+    Tổng giá trị: <b>${fmt(totalVal)} ₫</b> &nbsp;|&nbsp;
+    Hết bảo hành: <b class="text-danger">${expired}</b> &nbsp;|&nbsp;
+    Loại thiết bị: <b>${new Set(devices.map(d=>d.type)).size}</b> &nbsp;|&nbsp;
+    Vị trí: <b>${new Set(devices.map(d=>d.location).filter(Boolean)).size}</b>
+  `;
+}
 </script>
 </body>
 </html>
