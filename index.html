@@ -117,6 +117,7 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
     <h5 id="pageTitle">Dashboard</h5>
     <div class="d-flex gap-2 align-items-center">
       <span class="text-muted" style="font-size:12px" id="deviceCount">0 thiết bị</span>
+      <button class="btn btn-outline-dark btn-sm" onclick="openGitHubModal()" title="Push to GitHub"><i class="bi bi-github"></i></button>
       <button class="btn btn-primary btn-sm" onclick="openAddModal()"><i class="bi bi-plus-lg"></i> Thêm thiết bị</button>
     </div>
   </div>
@@ -960,7 +961,8 @@ function exportPDF() {
     <h2>📋 Danh sách thiết bị IT – SSIS</h2>
     <p>Ngày xuất: ${new Date().toLocaleDateString('vi-VN')} | Tổng: ${devices.length} thiết bị</p>
     <table><thead><tr><th>Asset Tag</th><th>Loại</th><th>Tên/Model</th><th>S/N</th><th>IP</th><th>Vị trí</th><th>Ngày mua</th><th>Hết BH</th><th>Trạng thái</th></tr></thead>
-    <tbody>${rows}</tbody></table></body></html>`);
+    <tbody>${rows}</tbody></table>
+</body></html>`);
   win.document.close();
   setTimeout(() => win.print(), 500);
 }
@@ -1049,6 +1051,54 @@ function renderImportStats() {
     Vị trí: <b>${new Set(devices.map(d=>d.location).filter(Boolean)).size}</b>
   `;
 }
+
+function openGitHubModal(){
+  const saved=sessionStorage.getItem('gh_token');
+  if(saved)document.getElementById('gh-token-input').value=saved;
+  document.getElementById('gh-push-status').innerHTML='';
+  new bootstrap.Modal(document.getElementById('githubModal')).show();
+}
+
+async function pushToGitHub(){
+  const token=document.getElementById('gh-token-input').value.trim();
+  if(!token){toast('Nhập GitHub Token trước','error');return;}
+  sessionStorage.setItem('gh_token',token);
+  const statusEl=document.getElementById('gh-push-status');
+  statusEl.innerHTML='<span class="text-muted">⏳ Đang lấy thông tin file...</span>';
+  const owner='simon399',repo='it-asset-management',path='index.html',branch='main';
+  const headers={'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json','Content-Type':'application/json'};
+  try{
+    const getResp=await fetch('https://api.github.com/repos/'+owner+'/'+repo+'/contents/'+path+'?ref='+branch,{headers});
+    if(!getResp.ok)throw new Error('Không lấy được file. Token có đúng không?');
+    const fileInfo=await getResp.json();
+    const sha=fileInfo.sha;
+    statusEl.innerHTML='<span class="text-muted">⏳ Đang push...</span>';
+    const html=document.documentElement.outerHTML;
+    const encoded=btoa(unescape(encodeURIComponent(html)));
+    const putResp=await fetch('https://api.github.com/repos/'+owner+'/'+repo+'/contents/'+path,{method:'PUT',headers,body:JSON.stringify({message:'Update via IT Asset App – '+new Date().toLocaleString('vi-VN'),content:encoded,sha,branch})});
+    if(!putResp.ok){const err=await putResp.json();throw new Error(err.message||'Push thất bại');}
+    statusEl.innerHTML='<span class="text-success fw-bold">✅ Push thành công! GitHub Pages sẽ cập nhật trong ~1 phút.</span>';
+    toast('✅ Đã push lên GitHub!');
+  }catch(e){statusEl.innerHTML='<span class="text-danger">❌ '+e.message+'</span>';toast('Lỗi: '+e.message,'error');}
+}
 </script>
+<div class="modal fade" id="githubModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title"><i class="bi bi-github me-2"></i>Push to GitHub</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <p class="text-muted" style="font-size:13px">Nhập GitHub Personal Access Token để tự động cập nhật app lên GitHub Pages.</p>
+        <label class="form-label">Personal Access Token</label>
+        <input type="password" class="form-control" id="gh-token-input" placeholder="ghp_xxxxxxxxxxxx">
+        <div class="form-text">Token cần có quyền <code>repo</code>. Chỉ lưu trong phiên này.</div>
+        <div id="gh-push-status" class="mt-3" style="font-size:13px"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        <button class="btn btn-dark" onclick="pushToGitHub()"><i class="bi bi-cloud-upload me-1"></i>Push lên GitHub</button>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
