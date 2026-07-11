@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
+<html lang="vi"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>IT Asset Management – SSIS</title>
@@ -91,7 +89,7 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
 @keyframes fadeIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
 </style>
 </head>
-<body>
+<body class="modal-open" style="overflow: hidden; padding-right: 0px;">
 
 <!-- Sidebar -->
 <div id="sidebar">
@@ -103,7 +101,7 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
     <div class="sidebar-section">Tổng quan</div>
     <a href="#" class="active" data-page="dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a>
     <div class="sidebar-section">Quản lý</div>
-    <a href="#" data-page="devices"><i class="bi bi-laptop"></i> Thiết bị</a>
+    <a href="#" data-page="devices" class=""><i class="bi bi-laptop"></i> Thiết bị</a>
     <a href="#" data-page="warranty"><i class="bi bi-shield-check"></i> Bảo hành</a>
     <a href="#" data-page="budget"><i class="bi bi-currency-dollar"></i> Ngân sách / Lifecycle</a>
     <div class="sidebar-section">Công cụ</div>
@@ -116,7 +114,7 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
   <div id="topbar">
     <h5 id="pageTitle">Dashboard</h5>
     <div class="d-flex gap-2 align-items-center">
-      <span class="text-muted" style="font-size:12px" id="deviceCount">0 thiết bị</span>
+      <span class="text-muted" style="font-size:12px" id="deviceCount">10 thiết bị</span>
       <button class="btn btn-outline-dark btn-sm" onclick="openGitHubModal()" title="Push to GitHub"><i class="bi bi-github"></i></button>
       <button class="btn btn-primary btn-sm" onclick="openAddModal()"><i class="bi bi-plus-lg"></i> Thêm thiết bị</button>
     </div>
@@ -129,7 +127,7 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
         <div class="stat-card">
           <div class="d-flex align-items-center gap-3 mb-2">
             <div class="icon" style="background:#eff6ff"><i class="bi bi-hdd-stack" style="color:#1a56db"></i></div>
-            <div><div class="val" id="stat-total">0</div><div class="lbl">Tổng thiết bị</div></div>
+            <div><div class="val" id="stat-total">10</div><div class="lbl">Tổng thiết bị</div></div>
           </div>
         </div>
       </div>
@@ -137,7 +135,7 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
         <div class="stat-card">
           <div class="d-flex align-items-center gap-3 mb-2">
             <div class="icon" style="background:#fef2f2"><i class="bi bi-exclamation-triangle" style="color:#dc2626"></i></div>
-            <div><div class="val text-danger" id="stat-expired">0</div><div class="lbl">Hết bảo hành</div></div>
+            <div><div class="val text-danger" id="stat-expired">8</div><div class="lbl">Hết bảo hành</div></div>
           </div>
         </div>
       </div>
@@ -145,7 +143,7 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
         <div class="stat-card">
           <div class="d-flex align-items-center gap-3 mb-2">
             <div class="icon" style="background:#fff7ed"><i class="bi bi-clock-history" style="color:#ea580c"></i></div>
-            <div><div class="val text-warning" id="stat-soon">0</div><div class="lbl">Sắp hết (90 ngày)</div></div>
+            <div><div class="val text-warning" id="stat-soon">1</div><div class="lbl">Sắp hết (90 ngày)</div></div>
           </div>
         </div>
       </div>
@@ -153,7 +151,7 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
         <div class="stat-card">
           <div class="d-flex align-items-center gap-3 mb-2">
             <div class="icon" style="background:#f0fdf4"><i class="bi bi-currency-dollar" style="color:#16a34a"></i></div>
-            <div><div class="val text-success" id="stat-value">0</div><div class="lbl">Tổng giá trị (tr₫)</div></div>
+            <div><div class="val text-success" id="stat-value">595.5</div><div class="lbl">Tổng giá trị (tr₫)</div></div>
           </div>
         </div>
       </div>
@@ -162,13 +160,13 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
       <div class="col-lg-6">
         <div class="chart-box">
           <h6 class="mb-3 fw-600">Thiết bị theo loại</h6>
-          <canvas id="chartByType" height="200"></canvas>
+          <canvas id="chartByType" height="1056" style="box-sizing: border-box; display: block; height: 528px; width: 528px;" width="1056"></canvas>
         </div>
       </div>
       <div class="col-lg-6">
         <div class="chart-box">
           <h6 class="mb-3 fw-600">Trạng thái thiết bị</h6>
-          <canvas id="chartByStatus" height="200"></canvas>
+          <canvas id="chartByStatus" height="704" style="box-sizing: border-box; display: block; height: 352px; width: 528px;" width="1056"></canvas>
         </div>
       </div>
       <div class="col-12">
@@ -177,7 +175,34 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
           <div class="table-responsive">
             <table class="table mb-0">
               <thead><tr><th>Tên</th><th>Loại</th><th>S/N</th><th>Hết bảo hành</th><th>Còn lại</th><th>Vị trí</th></tr></thead>
-              <tbody id="dashWarrantyTable"></tbody>
+              <tbody id="dashWarrantyTable"><tr class="w-expired">
+      <td><b>Dell Latitude 5540</b></td><td>Windows Laptop</td><td class="font-monospace">LAT24010</td>
+      <td>01/03/2023</td><td><span class="text-danger fw-bold">Đã hết 1228 ngày</span></td><td>Phòng hành chính</td>
+    </tr><tr class="w-expired">
+      <td><b>Hikvision DS-2CD2347G2</b></td><td>Camera IP</td><td class="font-monospace">HIK23006</td>
+      <td>20/05/2024</td><td><span class="text-danger fw-bold">Đã hết 782 ngày</span></td><td>Cổng vào</td>
+    </tr><tr class="w-expired">
+      <td><b>Samsung QN85B 85"</b></td><td>TV</td><td class="font-monospace">SAM22009</td>
+      <td>10/09/2024</td><td><span class="text-danger fw-bold">Đã hết 669 ngày</span></td><td>Sảnh chính</td>
+    </tr><tr class="w-expired">
+      <td><b>iPad 10th Gen</b></td><td>iPad / Tablet</td><td class="font-monospace">IPD24008</td>
+      <td>01/10/2024</td><td><span class="text-danger fw-bold">Đã hết 648 ngày</span></td><td>Thư viện</td>
+    </tr><tr class="w-expired">
+      <td><b>MacBook Pro 14" M3</b></td><td>MacBook</td><td class="font-monospace">MBP25005</td>
+      <td>15/01/2025</td><td><span class="text-danger fw-bold">Đã hết 542 ngày</span></td><td>Phòng IT</td>
+    </tr><tr class="w-expired">
+      <td><b>Ruckus R750</b></td><td>WiFi Access Point</td><td class="font-monospace">R75023001</td>
+      <td>15/03/2025</td><td><span class="text-danger fw-bold">Đã hết 483 ngày</span></td><td>Tầng 1 - Hành lang</td>
+    </tr><tr class="w-expired">
+      <td><b>Epson EB-L200F</b></td><td>Máy chiếu</td><td class="font-monospace">EP24003</td>
+      <td>01/06/2025</td><td><span class="text-danger fw-bold">Đã hết 405 ngày</span></td><td>Phòng họp Tầng 2</td>
+    </tr><tr class="w-expired">
+      <td><b>QSC Q-SYS Core 110f</b></td><td>Ampli / DSP</td><td class="font-monospace">QSC24004</td>
+      <td>10/11/2025</td><td><span class="text-danger fw-bold">Đã hết 243 ngày</span></td><td>Hội trường</td>
+    </tr><tr class="w-warning">
+      <td><b>Ruckus ICX 7150-24</b></td><td>Switch</td><td class="font-monospace">ICX23002</td>
+      <td>20/08/2026</td><td><span class="text-warning fw-bold">Còn 40 ngày</span></td><td>Phòng Server</td>
+    </tr></tbody>
             </table>
           </div>
         </div>
@@ -192,14 +217,12 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
         <input type="search" class="form-control form-control-sm" style="width:200px" placeholder="🔍 Tìm kiếm..." id="searchInput" oninput="renderDevices()">
         <select class="form-select form-select-sm" style="width:160px" id="filterType" onchange="renderDevices()">
           <option value="">Tất cả loại</option>
-        </select>
+        <option>WiFi Access Point</option><option>Switch</option><option>Router</option><option>Firewall</option><option>Máy chiếu</option><option>Màn hình</option><option>TV</option><option>Camera IP</option><option>Camera CCTV</option><option>Server</option><option>NAS / Storage</option><option>MacBook</option><option>Windows Laptop</option><option>Mac Mini</option><option>Mini PC</option><option>Desktop PC</option><option>iPad / Tablet</option><option>Điện thoại</option><option>Ampli / DSP</option><option>Loa</option><option>Micro</option><option>Mixer</option><option>UPS</option><option>Máy in</option><option>Scanner</option><option>Máy photo</option><option>Access Control</option><option>Thiết bị khác</option></select>
         <select class="form-select form-select-sm" style="width:140px" id="filterStatus" onchange="renderDevices()">
           <option value="">Mọi trạng thái</option>
           <option>Đang dùng</option><option>Sửa chữa</option><option>Ngưng dùng</option><option>Thanh lý</option>
         </select>
-        <select class="form-select form-select-sm" style="width:160px" id="filterLocation" onchange="renderDevices()">
-          <option value="">Tất cả vị trí</option>
-        </select>
+        <select class="form-select form-select-sm" style="width:160px" id="filterLocation" onchange="renderDevices()"><option value="">Tất cả vị trí</option><option>Cổng vào</option><option>Hội trường</option><option>Phòng IT</option><option>Phòng Server</option><option>Phòng hành chính</option><option>Phòng họp Tầng 2</option><option>Sảnh chính</option><option>Thư viện</option><option>Tầng 1 - Hành lang</option></select>
         <button class="btn btn-outline-secondary btn-sm ms-auto" onclick="clearFilters()"><i class="bi bi-x-circle"></i> Xóa lọc</button>
       </div>
       <div class="table-responsive">
@@ -219,10 +242,160 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
               <th style="width:80px">Thao tác</th>
             </tr>
           </thead>
-          <tbody id="deviceTable"></tbody>
+          <tbody id="deviceTable"><tr class="w-expired" style="cursor:pointer" onclick="viewDevice('D001')">
+      <td class="text-muted" style="font-size:11px">SSIS-IT-001</td>
+      <td><b>Ruckus R750</b><br><small class="text-muted">Ruckus</small></td>
+      <td><span class="badge-type" style="background:#e0e7ff;color:#3730a3">WiFi Access Point</span></td>
+      <td class="font-monospace" style="font-size:12px">R75023001</td>
+      <td class="font-monospace" style="font-size:12px">192.168.10.11</td>
+      <td style="font-size:12px">Tầng 1 - Hành lang</td>
+      <td style="font-size:12px">15/03/2022</td>
+      <td style="font-size:12px"><span class="text-danger">15/03/2025<br><small>Hết 483n</small></span></td>
+      <td style="font-size:12px;white-space:nowrap">18.000.000</td>
+      <td><span class="badge-type s-active">Đang dùng</span></td>
+      <td onclick="event.stopPropagation()">
+        <button class="btn btn-xs btn-outline-primary py-0 px-1 me-1" onclick="editDevice('D001')" title="Sửa"><i class="bi bi-pencil" style="font-size:12px"></i></button>
+        <button class="btn btn-xs btn-outline-danger py-0 px-1" onclick="deleteDevice('D001')" title="Xóa"><i class="bi bi-trash" style="font-size:12px"></i></button>
+      </td>
+    </tr><tr class="w-warning" style="cursor:pointer" onclick="viewDevice('D002')">
+      <td class="text-muted" style="font-size:11px">SSIS-IT-002</td>
+      <td><b>Ruckus ICX 7150-24</b><br><small class="text-muted">Ruckus</small></td>
+      <td><span class="badge-type" style="background:#e0e7ff;color:#3730a3">Switch</span></td>
+      <td class="font-monospace" style="font-size:12px">ICX23002</td>
+      <td class="font-monospace" style="font-size:12px">192.168.1.2</td>
+      <td style="font-size:12px">Phòng Server</td>
+      <td style="font-size:12px">20/08/2021</td>
+      <td style="font-size:12px"><span class="text-warning">20/08/2026<br><small>Còn 40n</small></span></td>
+      <td style="font-size:12px;white-space:nowrap">45.000.000</td>
+      <td><span class="badge-type s-active">Đang dùng</span></td>
+      <td onclick="event.stopPropagation()">
+        <button class="btn btn-xs btn-outline-primary py-0 px-1 me-1" onclick="editDevice('D002')" title="Sửa"><i class="bi bi-pencil" style="font-size:12px"></i></button>
+        <button class="btn btn-xs btn-outline-danger py-0 px-1" onclick="deleteDevice('D002')" title="Xóa"><i class="bi bi-trash" style="font-size:12px"></i></button>
+      </td>
+    </tr><tr class="w-expired" style="cursor:pointer" onclick="viewDevice('D003')">
+      <td class="text-muted" style="font-size:11px">SSIS-IT-010</td>
+      <td><b>Epson EB-L200F</b><br><small class="text-muted">Epson</small></td>
+      <td><span class="badge-type" style="background:#e0e7ff;color:#3730a3">Máy chiếu</span></td>
+      <td class="font-monospace" style="font-size:12px">EP24003</td>
+      <td class="font-monospace" style="font-size:12px">—</td>
+      <td style="font-size:12px">Phòng họp Tầng 2</td>
+      <td style="font-size:12px">01/06/2023</td>
+      <td style="font-size:12px"><span class="text-danger">01/06/2025<br><small>Hết 405n</small></span></td>
+      <td style="font-size:12px;white-space:nowrap">32.000.000</td>
+      <td><span class="badge-type s-active">Đang dùng</span></td>
+      <td onclick="event.stopPropagation()">
+        <button class="btn btn-xs btn-outline-primary py-0 px-1 me-1" onclick="editDevice('D003')" title="Sửa"><i class="bi bi-pencil" style="font-size:12px"></i></button>
+        <button class="btn btn-xs btn-outline-danger py-0 px-1" onclick="deleteDevice('D003')" title="Xóa"><i class="bi bi-trash" style="font-size:12px"></i></button>
+      </td>
+    </tr><tr class="w-expired" style="cursor:pointer" onclick="viewDevice('D004')">
+      <td class="text-muted" style="font-size:11px">SSIS-IT-020</td>
+      <td><b>QSC Q-SYS Core 110f</b><br><small class="text-muted">QSC</small></td>
+      <td><span class="badge-type" style="background:#e0e7ff;color:#3730a3">Ampli / DSP</span></td>
+      <td class="font-monospace" style="font-size:12px">QSC24004</td>
+      <td class="font-monospace" style="font-size:12px">192.168.20.5</td>
+      <td style="font-size:12px">Hội trường</td>
+      <td style="font-size:12px">10/11/2022</td>
+      <td style="font-size:12px"><span class="text-danger">10/11/2025<br><small>Hết 243n</small></span></td>
+      <td style="font-size:12px;white-space:nowrap">120.000.000</td>
+      <td><span class="badge-type s-active">Đang dùng</span></td>
+      <td onclick="event.stopPropagation()">
+        <button class="btn btn-xs btn-outline-primary py-0 px-1 me-1" onclick="editDevice('D004')" title="Sửa"><i class="bi bi-pencil" style="font-size:12px"></i></button>
+        <button class="btn btn-xs btn-outline-danger py-0 px-1" onclick="deleteDevice('D004')" title="Xóa"><i class="bi bi-trash" style="font-size:12px"></i></button>
+      </td>
+    </tr><tr class="w-expired" style="cursor:pointer" onclick="viewDevice('D005')">
+      <td class="text-muted" style="font-size:11px">SSIS-IT-030</td>
+      <td><b>MacBook Pro 14" M3</b><br><small class="text-muted">Apple</small></td>
+      <td><span class="badge-type" style="background:#e0e7ff;color:#3730a3">MacBook</span></td>
+      <td class="font-monospace" style="font-size:12px">MBP25005</td>
+      <td class="font-monospace" style="font-size:12px">192.168.1.50</td>
+      <td style="font-size:12px">Phòng IT</td>
+      <td style="font-size:12px">15/01/2024</td>
+      <td style="font-size:12px"><span class="text-danger">15/01/2025<br><small>Hết 542n</small></span></td>
+      <td style="font-size:12px;white-space:nowrap">52.000.000</td>
+      <td><span class="badge-type s-active">Đang dùng</span></td>
+      <td onclick="event.stopPropagation()">
+        <button class="btn btn-xs btn-outline-primary py-0 px-1 me-1" onclick="editDevice('D005')" title="Sửa"><i class="bi bi-pencil" style="font-size:12px"></i></button>
+        <button class="btn btn-xs btn-outline-danger py-0 px-1" onclick="deleteDevice('D005')" title="Xóa"><i class="bi bi-trash" style="font-size:12px"></i></button>
+      </td>
+    </tr><tr class="w-expired" style="cursor:pointer" onclick="viewDevice('D006')">
+      <td class="text-muted" style="font-size:11px">SSIS-IT-040</td>
+      <td><b>Hikvision DS-2CD2347G2</b><br><small class="text-muted">Hikvision</small></td>
+      <td><span class="badge-type" style="background:#e0e7ff;color:#3730a3">Camera IP</span></td>
+      <td class="font-monospace" style="font-size:12px">HIK23006</td>
+      <td class="font-monospace" style="font-size:12px">192.168.30.11</td>
+      <td style="font-size:12px">Cổng vào</td>
+      <td style="font-size:12px">20/05/2021</td>
+      <td style="font-size:12px"><span class="text-danger">20/05/2024<br><small>Hết 782n</small></span></td>
+      <td style="font-size:12px;white-space:nowrap">5.500.000</td>
+      <td><span class="badge-type s-active">Đang dùng</span></td>
+      <td onclick="event.stopPropagation()">
+        <button class="btn btn-xs btn-outline-primary py-0 px-1 me-1" onclick="editDevice('D006')" title="Sửa"><i class="bi bi-pencil" style="font-size:12px"></i></button>
+        <button class="btn btn-xs btn-outline-danger py-0 px-1" onclick="deleteDevice('D006')" title="Xóa"><i class="bi bi-trash" style="font-size:12px"></i></button>
+      </td>
+    </tr><tr class="" style="cursor:pointer" onclick="viewDevice('D007')">
+      <td class="text-muted" style="font-size:11px">SSIS-IT-050</td>
+      <td><b>Dell PowerEdge R750</b><br><small class="text-muted">Dell</small></td>
+      <td><span class="badge-type" style="background:#e0e7ff;color:#3730a3">Server</span></td>
+      <td class="font-monospace" style="font-size:12px">DEL22007</td>
+      <td class="font-monospace" style="font-size:12px">192.168.1.10</td>
+      <td style="font-size:12px">Phòng Server</td>
+      <td style="font-size:12px">01/07/2022</td>
+      <td style="font-size:12px"><span class="text-success">01/07/2027</span></td>
+      <td style="font-size:12px;white-space:nowrap">250.000.000</td>
+      <td><span class="badge-type s-active">Đang dùng</span></td>
+      <td onclick="event.stopPropagation()">
+        <button class="btn btn-xs btn-outline-primary py-0 px-1 me-1" onclick="editDevice('D007')" title="Sửa"><i class="bi bi-pencil" style="font-size:12px"></i></button>
+        <button class="btn btn-xs btn-outline-danger py-0 px-1" onclick="deleteDevice('D007')" title="Xóa"><i class="bi bi-trash" style="font-size:12px"></i></button>
+      </td>
+    </tr><tr class="w-expired" style="cursor:pointer" onclick="viewDevice('D008')">
+      <td class="text-muted" style="font-size:11px">SSIS-IT-060</td>
+      <td><b>iPad 10th Gen</b><br><small class="text-muted">Apple</small></td>
+      <td><span class="badge-type" style="background:#e0e7ff;color:#3730a3">iPad / Tablet</span></td>
+      <td class="font-monospace" style="font-size:12px">IPD24008</td>
+      <td class="font-monospace" style="font-size:12px">—</td>
+      <td style="font-size:12px">Thư viện</td>
+      <td style="font-size:12px">01/10/2023</td>
+      <td style="font-size:12px"><span class="text-danger">01/10/2024<br><small>Hết 648n</small></span></td>
+      <td style="font-size:12px;white-space:nowrap">13.000.000</td>
+      <td><span class="badge-type s-active">Đang dùng</span></td>
+      <td onclick="event.stopPropagation()">
+        <button class="btn btn-xs btn-outline-primary py-0 px-1 me-1" onclick="editDevice('D008')" title="Sửa"><i class="bi bi-pencil" style="font-size:12px"></i></button>
+        <button class="btn btn-xs btn-outline-danger py-0 px-1" onclick="deleteDevice('D008')" title="Xóa"><i class="bi bi-trash" style="font-size:12px"></i></button>
+      </td>
+    </tr><tr class="w-expired" style="cursor:pointer" onclick="viewDevice('D009')">
+      <td class="text-muted" style="font-size:11px">SSIS-IT-070</td>
+      <td><b>Samsung QN85B 85"</b><br><small class="text-muted">Samsung</small></td>
+      <td><span class="badge-type" style="background:#e0e7ff;color:#3730a3">TV</span></td>
+      <td class="font-monospace" style="font-size:12px">SAM22009</td>
+      <td class="font-monospace" style="font-size:12px">192.168.1.80</td>
+      <td style="font-size:12px">Sảnh chính</td>
+      <td style="font-size:12px">10/09/2022</td>
+      <td style="font-size:12px"><span class="text-danger">10/09/2024<br><small>Hết 669n</small></span></td>
+      <td style="font-size:12px;white-space:nowrap">38.000.000</td>
+      <td><span class="badge-type s-active">Đang dùng</span></td>
+      <td onclick="event.stopPropagation()">
+        <button class="btn btn-xs btn-outline-primary py-0 px-1 me-1" onclick="editDevice('D009')" title="Sửa"><i class="bi bi-pencil" style="font-size:12px"></i></button>
+        <button class="btn btn-xs btn-outline-danger py-0 px-1" onclick="deleteDevice('D009')" title="Xóa"><i class="bi bi-trash" style="font-size:12px"></i></button>
+      </td>
+    </tr><tr class="w-expired" style="cursor:pointer" onclick="viewDevice('D010')">
+      <td class="text-muted" style="font-size:11px">SSIS-IT-080</td>
+      <td><b>Dell Latitude 5540</b><br><small class="text-muted">Dell</small></td>
+      <td><span class="badge-type" style="background:#e0e7ff;color:#3730a3">Windows Laptop</span></td>
+      <td class="font-monospace" style="font-size:12px">LAT24010</td>
+      <td class="font-monospace" style="font-size:12px">—</td>
+      <td style="font-size:12px">Phòng hành chính</td>
+      <td style="font-size:12px">01/03/2020</td>
+      <td style="font-size:12px"><span class="text-danger">01/03/2023<br><small>Hết 1228n</small></span></td>
+      <td style="font-size:12px;white-space:nowrap">22.000.000</td>
+      <td><span class="badge-type s-repair">Sửa chữa</span></td>
+      <td onclick="event.stopPropagation()">
+        <button class="btn btn-xs btn-outline-primary py-0 px-1 me-1" onclick="editDevice('D010')" title="Sửa"><i class="bi bi-pencil" style="font-size:12px"></i></button>
+        <button class="btn btn-xs btn-outline-danger py-0 px-1" onclick="deleteDevice('D010')" title="Xóa"><i class="bi bi-trash" style="font-size:12px"></i></button>
+      </td>
+    </tr></tbody>
         </table>
       </div>
-      <div class="p-3 text-muted" style="font-size:12px" id="tableFooter"></div>
+      <div class="p-3 text-muted" style="font-size:12px" id="tableFooter">Hiển thị 10 / 10 thiết bị</div>
     </div>
   </div>
 
@@ -303,12 +476,12 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
             <button class="btn btn-outline-success" onclick="downloadTemplate()"><i class="bi bi-file-earmark-arrow-down me-2"></i>Tải Template Excel</button>
             <label class="btn btn-primary mb-0">
               <i class="bi bi-upload me-2"></i>Chọn file Excel để import
-              <input type="file" accept=".xlsx,.xls" hidden id="importFile" onchange="importExcel(this)">
+              <input type="file" accept=".xlsx,.xls" hidden="" id="importFile" onchange="importExcel(this)">
             </label>
             <hr>
             <label class="btn btn-outline-secondary mb-0">
               <i class="bi bi-braces me-2"></i>Khôi phục từ JSON backup
-              <input type="file" accept=".json" hidden id="importJSON" onchange="importJSON(this)">
+              <input type="file" accept=".json" hidden="" id="importJSON" onchange="importJSON(this)">
             </label>
           </div>
         </div>
@@ -336,13 +509,13 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
           <div class="row g-3">
             <div class="col-md-4">
               <label class="form-label">Loại thiết bị *</label>
-              <select class="form-select" id="f-type" required onchange="onTypeChange()">
+              <select class="form-select" id="f-type" required="" onchange="onTypeChange()">
                 <option value="">-- Chọn loại --</option>
-              </select>
+              <option>WiFi Access Point</option><option>Switch</option><option>Router</option><option>Firewall</option><option>Máy chiếu</option><option>Màn hình</option><option>TV</option><option>Camera IP</option><option>Camera CCTV</option><option>Server</option><option>NAS / Storage</option><option>MacBook</option><option>Windows Laptop</option><option>Mac Mini</option><option>Mini PC</option><option>Desktop PC</option><option>iPad / Tablet</option><option>Điện thoại</option><option>Ampli / DSP</option><option>Loa</option><option>Micro</option><option>Mixer</option><option>UPS</option><option>Máy in</option><option>Scanner</option><option>Máy photo</option><option>Access Control</option><option>Thiết bị khác</option></select>
             </div>
             <div class="col-md-4">
               <label class="form-label">Tên / Model *</label>
-              <input class="form-control" id="f-name" placeholder="VD: Ruckus R750, Epson EB-X51..." required>
+              <input class="form-control" id="f-name" placeholder="VD: Ruckus R750, Epson EB-X51..." required="">
             </div>
             <div class="col-md-4">
               <label class="form-label">Hãng sản xuất</label>
@@ -371,7 +544,7 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
               <input class="form-control" id="f-assigned" placeholder="Tên người / bộ phận">
             </div>
 
-            <div class="col-12"><hr class="my-1"><small class="text-muted fw-semibold">MẠNG & KẾT NỐI</small></div>
+            <div class="col-12"><hr class="my-1"><small class="text-muted fw-semibold">MẠNG &amp; KẾT NỐI</small></div>
             <div class="col-md-3">
               <label class="form-label">Địa chỉ IP</label>
               <input class="form-control" id="f-ip" placeholder="192.168.x.x">
@@ -389,10 +562,10 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
               <input class="form-control" id="f-vlan" placeholder="VD: VLAN 10">
             </div>
 
-            <div class="col-12"><hr class="my-1"><small class="text-muted fw-semibold">MUA SẮM & BẢO HÀNH</small></div>
+            <div class="col-12"><hr class="my-1"><small class="text-muted fw-semibold">MUA SẮM &amp; BẢO HÀNH</small></div>
             <div class="col-md-3">
               <label class="form-label">Ngày mua *</label>
-              <input type="date" class="form-control" id="f-purchase-date" required onchange="calcWarranty()">
+              <input type="date" class="form-control" id="f-purchase-date" required="" onchange="calcWarranty()">
             </div>
             <div class="col-md-3">
               <label class="form-label">Thời hạn BH (tháng)</label>
@@ -400,7 +573,7 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
             </div>
             <div class="col-md-3">
               <label class="form-label">Hết bảo hành (tự tính)</label>
-              <input type="date" class="form-control" id="f-warranty-end" readonly style="background:#f8fafc">
+              <input type="date" class="form-control" id="f-warranty-end" readonly="" style="background:#f8fafc">
             </div>
             <div class="col-md-3">
               <label class="form-label">Số PO / Hợp đồng</label>
@@ -1082,7 +1255,7 @@ async function pushToGitHub(){
   }catch(e){statusEl.innerHTML='<span class="text-danger">❌ '+e.message+'</span>';toast('Lỗi: '+e.message,'error');}
 }
 </script>
-<div class="modal fade" id="githubModal" tabindex="-1">
+<div class="modal fade show" id="githubModal" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header"><h5 class="modal-title"><i class="bi bi-github me-2"></i>Push to GitHub</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
@@ -1091,7 +1264,7 @@ async function pushToGitHub(){
         <label class="form-label">Personal Access Token</label>
         <input type="password" class="form-control" id="gh-token-input" placeholder="ghp_xxxxxxxxxxxx">
         <div class="form-text">Token cần có quyền <code>repo</code>. Chỉ lưu trong phiên này.</div>
-        <div id="gh-push-status" class="mt-3" style="font-size:13px"></div>
+        <div id="gh-push-status" class="mt-3" style="font-size:13px"><span class="text-muted">⏳ Đang push...</span></div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
@@ -1100,5 +1273,6 @@ async function pushToGitHub(){
     </div>
   </div>
 </div>
-</body>
-</html>
+
+
+<div class="modal-backdrop fade show"></div></body></html>
