@@ -129,10 +129,10 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
   </div>
   <nav>
     <div class="sidebar-section">Tổng quan</div>
-    <a href="#" class="active" data-page="dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a>
+    <a href="#" class="" data-page="dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a>
     <div class="sidebar-section">Quản lý</div>
     <a href="#" data-page="devices"><i class="bi bi-laptop"></i> Thiết bị</a>
-    <a href="#" data-page="locations"><i class="bi bi-geo-alt"></i> Locations</a>
+    <a href="#" data-page="locations" class="active"><i class="bi bi-geo-alt"></i> Locations</a>
     <a href="#" data-page="warranty"><i class="bi bi-shield-check"></i> Bảo hành</a>
     <a href="#" data-page="budget"><i class="bi bi-currency-dollar"></i> Ngân sách / Lifecycle</a>
     <div class="sidebar-section">Công cụ</div>
@@ -143,7 +143,7 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
 <!-- Main -->
 <div id="main">
   <div id="topbar">
-    <h5 id="pageTitle">Dashboard</h5>
+    <h5 id="pageTitle">Locations</h5>
     <div class="d-flex gap-2 align-items-center">
       <span class="text-muted" style="font-size:12px" id="deviceCount">10 thiết bị</span>
       <button class="btn btn-outline-dark btn-sm" onclick="openGitHubModal()" title="Push to GitHub"><i class="bi bi-github"></i></button>
@@ -152,7 +152,7 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
   </div>
 
   <!-- DASHBOARD -->
-  <div class="page active" id="page-dashboard">
+  <div class="page" id="page-dashboard">
     <div class="row g-3 mb-4">
       <div class="col-6 col-xl-3">
         <div class="stat-card">
@@ -253,7 +253,9 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
           <option value="">Mọi trạng thái</option>
           <option>Đang dùng</option><option>Sửa chữa</option><option>Ngưng dùng</option><option>Thanh lý</option>
         </select>
-        <select class="form-select form-select-sm" style="width:160px" id="filterLocation" onchange="renderDevices()"><option value="">Tất cả vị trí</option><option>Cổng vào</option><option>Hội trường</option><option>Phòng IT</option><option>Phòng Server</option><option>Phòng hành chính</option><option>Phòng họp Tầng 2</option><option>Sảnh chính</option><option>Thư viện</option><option>Tầng 1 - Hành lang</option></select>
+        <select class="form-select form-select-sm" style="width:160px" id="filterLocation" onchange="renderDevices()">
+          <option value="">Tất cả vị trí</option>
+        </select>
         <button class="btn btn-outline-secondary btn-sm ms-auto" onclick="clearFilters()"><i class="bi bi-x-circle"></i> Xóa lọc</button>
       </div>
       <div class="table-responsive">
@@ -528,9 +530,1597 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
 </div>
 
   <!-- LOCATIONS -->
-  <div class="page" id="page-locations">
-    <div class="loc-summary" id="locSummary"></div>
-    <div id="locationTree"></div>
+  <div class="page active" id="page-locations">
+    <div class="loc-summary" id="locSummary">
+    <div class="loc-stat"><div class="ls-val text-primary">5</div><div class="ls-lbl">Tòa nhà</div></div>
+    <div class="loc-stat"><div class="ls-val text-success">27</div><div class="ls-lbl">Tầng</div></div>
+    <div class="loc-stat"><div class="ls-val">321</div><div class="ls-lbl">Phòng</div></div>
+    <div class="loc-stat"><div class="ls-val text-warning">0</div><div class="ls-lbl">Phòng có thiết bị</div></div>
+    <div class="loc-stat"><div class="ls-val text-primary">10</div><div class="ls-lbl">Tổng thiết bị</div></div>
+  </div>
+    <div id="locationTree"><div class="loc-building">
+      <div class="loc-building-header" onclick="toggleBuilding(this)">
+        <div class="bc-icon" style="background:#dbeafe">🏫</div>
+        <div class="bc-info">
+          <div class="bc-name" style="color:#1d4ed8">Building B (LES)</div>
+          <div class="bc-sub">5 tầng · 83 phòng</div>
+        </div>
+        <span class="bc-count">0 thiết bị</span>
+        <i class="bi bi-chevron-down chevron"></i>
+      </div>
+      <div class="loc-floors"><div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">BF</span>
+          <span style="font-size:12px;color:#94a3b8">19 phòng</span>
+          
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms"><div class="loc-room-row" onclick="filterToRoom('B','BF','B000')">
+          <span class="rm-code">B000</span>
+          <span class="rm-name">Auditorium</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','BF','B001')">
+          <span class="rm-code">B001</span>
+          <span class="rm-name">Stage</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','BF','B002')">
+          <span class="rm-code">B002</span>
+          <span class="rm-name">Hazardous Waste Storage</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','BF','B003')">
+          <span class="rm-code">B003</span>
+          <span class="rm-name">Storage</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','BF','B004')">
+          <span class="rm-code">B004</span>
+          <span class="rm-name">Locker Area</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','BF','B005')">
+          <span class="rm-code">B005</span>
+          <span class="rm-name">Facility Storage</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','BF','B006')">
+          <span class="rm-code">B006</span>
+          <span class="rm-name">Cleaner Lounge</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','BF','B007')">
+          <span class="rm-code">B007</span>
+          <span class="rm-name">Water Tank Area</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','BF','B008')">
+          <span class="rm-code">B008</span>
+          <span class="rm-name">Facility Storage</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','BF','B009')">
+          <span class="rm-code">B009</span>
+          <span class="rm-name">IT Router Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','BF','B010')">
+          <span class="rm-code">B010</span>
+          <span class="rm-name">Collaboration Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','BF','B012')">
+          <span class="rm-code">B012</span>
+          <span class="rm-name">Laundry</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','BF','B013')">
+          <span class="rm-code">B013</span>
+          <span class="rm-name">Storage</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','BF','B014')">
+          <span class="rm-code">B014</span>
+          <span class="rm-name">Chiller Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','BF','B015')">
+          <span class="rm-code">B015</span>
+          <span class="rm-name">Facility Storage</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','BF','B017')">
+          <span class="rm-code">B017</span>
+          <span class="rm-name">Resource Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','BF','B019')">
+          <span class="rm-code">B019</span>
+          <span class="rm-name">Art Storage</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','BF','B021')">
+          <span class="rm-code">B021</span>
+          <span class="rm-name">Storage</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','BF','B023')">
+          <span class="rm-code">B023</span>
+          <span class="rm-name">Live Water Pump</span>
+          <span class="rm-count zero">0</span>
+        </div></div>
+      </div><div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">1F</span>
+          <span style="font-size:12px;color:#94a3b8">20 phòng</span>
+          
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms"><div class="loc-room-row" onclick="filterToRoom('B','1F','B100')">
+          <span class="rm-code">B100</span>
+          <span class="rm-name">Early Childhood</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','1F','B101')">
+          <span class="rm-code">B101</span>
+          <span class="rm-name">Lost &amp; Found Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','1F','B102')">
+          <span class="rm-code">B102</span>
+          <span class="rm-name">Learning Support EC/K/1</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','1F','B103')">
+          <span class="rm-code">B103</span>
+          <span class="rm-name">IT Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','1F','B104')">
+          <span class="rm-code">B104</span>
+          <span class="rm-name">Kindergarten</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','1F','B105')">
+          <span class="rm-code">B105</span>
+          <span class="rm-name">Storage</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','1F','B106')">
+          <span class="rm-code">B106</span>
+          <span class="rm-name">Kindergarten</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','1F','B107')">
+          <span class="rm-code">B107</span>
+          <span class="rm-name">Early Childhood</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','1F','B108')">
+          <span class="rm-code">B108</span>
+          <span class="rm-name">ES Health Office / Clinic</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','1F','B109')">
+          <span class="rm-code">B109</span>
+          <span class="rm-name">Early Childhood</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','1F','B110')">
+          <span class="rm-code">B110</span>
+          <span class="rm-name">AHU Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','1F','B111')">
+          <span class="rm-code">B111</span>
+          <span class="rm-name">Kindergarten</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','1F','B113')">
+          <span class="rm-code">B113</span>
+          <span class="rm-name">Kindergarten</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','1F','B115')">
+          <span class="rm-code">B115</span>
+          <span class="rm-name">MSB Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','1F','B117')">
+          <span class="rm-code">B117</span>
+          <span class="rm-name">Transformer / Backup Generator</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','1F','B119')">
+          <span class="rm-code">B119</span>
+          <span class="rm-name">Vacant</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','1F','B121')">
+          <span class="rm-code">B121</span>
+          <span class="rm-name">Meeting Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','1F','B123')">
+          <span class="rm-code">B123</span>
+          <span class="rm-name">Lower Associate Principal</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','1F','B125')">
+          <span class="rm-code">B125</span>
+          <span class="rm-name">Kitchen for Studying</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','1F','B126')">
+          <span class="rm-code">B126</span>
+          <span class="rm-name">Athletics Office</span>
+          <span class="rm-count zero">0</span>
+        </div></div>
+      </div><div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">2F</span>
+          <span style="font-size:12px;color:#94a3b8">14 phòng</span>
+          
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms"><div class="loc-room-row" onclick="filterToRoom('B','2F','B200')">
+          <span class="rm-code">B200</span>
+          <span class="rm-name">Vacant</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','2F','B201')">
+          <span class="rm-code">B201</span>
+          <span class="rm-name">Vacant</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','2F','B202')">
+          <span class="rm-code">B202</span>
+          <span class="rm-name">Faculty Lounge</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','2F','B203')">
+          <span class="rm-code">B203</span>
+          <span class="rm-name">IT Router</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','2F','B205')">
+          <span class="rm-code">B205</span>
+          <span class="rm-name">Book Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','2F','B207')">
+          <span class="rm-code">B207</span>
+          <span class="rm-name">Explorers Program</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','2F','B208')">
+          <span class="rm-code">B208</span>
+          <span class="rm-name">G1 Meeting Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','2F','B209')">
+          <span class="rm-code">B209</span>
+          <span class="rm-name">Visual Arts EC/K/1</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','2F','B210')">
+          <span class="rm-code">B210</span>
+          <span class="rm-name">Grade 1</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','2F','B211')">
+          <span class="rm-code">B211</span>
+          <span class="rm-name">Grade 1</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','2F','B212')">
+          <span class="rm-code">B212</span>
+          <span class="rm-name">Grade 1</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','2F','B213')">
+          <span class="rm-code">B213</span>
+          <span class="rm-name">Grade 1</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','2F','B214')">
+          <span class="rm-code">B214</span>
+          <span class="rm-name">EAL</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','2F','B215')">
+          <span class="rm-code">B215</span>
+          <span class="rm-name">Grade 1 POD</span>
+          <span class="rm-count zero">0</span>
+        </div></div>
+      </div><div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">3F</span>
+          <span style="font-size:12px;color:#94a3b8">15 phòng</span>
+          
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms"><div class="loc-room-row" onclick="filterToRoom('B','3F','B300')">
+          <span class="rm-code">B300</span>
+          <span class="rm-name">Vietnamese</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','3F','B301')">
+          <span class="rm-code">B301</span>
+          <span class="rm-name">Vietnamese</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','3F','B302')">
+          <span class="rm-code">B302</span>
+          <span class="rm-name">EAL</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','3F','B303')">
+          <span class="rm-code">B303</span>
+          <span class="rm-name">IT Router</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','3F','B304')">
+          <span class="rm-code">B304</span>
+          <span class="rm-name">Grade 2</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','3F','B305')">
+          <span class="rm-code">B305</span>
+          <span class="rm-name">IT Storage</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','3F','B306')">
+          <span class="rm-code">B306</span>
+          <span class="rm-name">Grade 2</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','3F','B307')">
+          <span class="rm-code">B307</span>
+          <span class="rm-name">Grade 2</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','3F','B308')">
+          <span class="rm-code">B308</span>
+          <span class="rm-name">AHU</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','3F','B309')">
+          <span class="rm-code">B309</span>
+          <span class="rm-name">Grade 2</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','3F','B310')">
+          <span class="rm-code">B310</span>
+          <span class="rm-name">G2 Meeting Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','3F','B311')">
+          <span class="rm-code">B311</span>
+          <span class="rm-name">Grade 2</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','3F','B312')">
+          <span class="rm-code">B312</span>
+          <span class="rm-name">Counselor EC/K/2/4</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','3F','B313')">
+          <span class="rm-code">B313</span>
+          <span class="rm-name">Learning Support</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','3F','B315')">
+          <span class="rm-code">B315</span>
+          <span class="rm-name">Psychologist EC/1/3/5</span>
+          <span class="rm-count zero">0</span>
+        </div></div>
+      </div><div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">4F</span>
+          <span style="font-size:12px;color:#94a3b8">15 phòng</span>
+          
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms"><div class="loc-room-row" onclick="filterToRoom('B','4F','B400')">
+          <span class="rm-code">B400</span>
+          <span class="rm-name">AHU Area</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','4F','B401')">
+          <span class="rm-code">B401</span>
+          <span class="rm-name">Grade 3</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','4F','B402')">
+          <span class="rm-code">B402</span>
+          <span class="rm-name">Grade 3</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','4F','B403')">
+          <span class="rm-code">B403</span>
+          <span class="rm-name">IT Router</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','4F','B404')">
+          <span class="rm-code">B404</span>
+          <span class="rm-name">Team Breakout</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','4F','B405')">
+          <span class="rm-code">B405</span>
+          <span class="rm-name">IT Storage</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','4F','B406')">
+          <span class="rm-code">B406</span>
+          <span class="rm-name">Grade 3</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','4F','B407')">
+          <span class="rm-code">B407</span>
+          <span class="rm-name">Grade 3</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','4F','B408')">
+          <span class="rm-code">B408</span>
+          <span class="rm-name">Vacant</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','4F','B409')">
+          <span class="rm-code">B409</span>
+          <span class="rm-name">Grade 3</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','4F','B410')">
+          <span class="rm-code">B410</span>
+          <span class="rm-name">Vacant</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','4F','B411')">
+          <span class="rm-code">B411</span>
+          <span class="rm-name">EAL 3</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','4F','B412')">
+          <span class="rm-code">B412</span>
+          <span class="rm-name">G3 Meeting Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','4F','B413')">
+          <span class="rm-code">B413</span>
+          <span class="rm-name">Vacant</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('B','4F','B414')">
+          <span class="rm-code">B414</span>
+          <span class="rm-name">Vacant</span>
+          <span class="rm-count zero">0</span>
+        </div></div>
+      </div></div>
+    </div><div class="loc-building">
+      <div class="loc-building-header" onclick="toggleBuilding(this)">
+        <div class="bc-icon" style="background:#fce7f3">🎓</div>
+        <div class="bc-info">
+          <div class="bc-name" style="color:#9d174d">Building C (HS)</div>
+          <div class="bc-sub">6 tầng · 90 phòng</div>
+        </div>
+        <span class="bc-count">0 thiết bị</span>
+        <i class="bi bi-chevron-down chevron"></i>
+      </div>
+      <div class="loc-floors"><div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">BF</span>
+          <span style="font-size:12px;color:#94a3b8">19 phòng</span>
+          
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms"><div class="loc-room-row" onclick="filterToRoom('C','BF','C000')">
+          <span class="rm-code">C000</span>
+          <span class="rm-name">Weight &amp; Fitness Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','BF','C001')">
+          <span class="rm-code">C001</span>
+          <span class="rm-name">HS Gym</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','BF','C002')">
+          <span class="rm-code">C002</span>
+          <span class="rm-name">School Store / Storage</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','BF','C003')">
+          <span class="rm-code">C003</span>
+          <span class="rm-name">PE Storage</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','BF','C004')">
+          <span class="rm-code">C004</span>
+          <span class="rm-name">PE Office</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','BF','C005')">
+          <span class="rm-code">C005</span>
+          <span class="rm-name">PE Storage</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','BF','C006')">
+          <span class="rm-code">C006</span>
+          <span class="rm-name">Finance Storage</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','BF','C007')">
+          <span class="rm-code">C007</span>
+          <span class="rm-name">Electrical Box / IT Area</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','BF','C008')">
+          <span class="rm-code">C008</span>
+          <span class="rm-name">Meeting Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','BF','C009')">
+          <span class="rm-code">C009</span>
+          <span class="rm-name">MPR / Practice Room 2</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','BF','C010')">
+          <span class="rm-code">C010</span>
+          <span class="rm-name">Finance Storage</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','BF','C011')">
+          <span class="rm-code">C011</span>
+          <span class="rm-name">Book Store / Student Records</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','BF','C013')">
+          <span class="rm-code">C013</span>
+          <span class="rm-name">AHU Room / IP Store</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','BF','C014')">
+          <span class="rm-code">C014</span>
+          <span class="rm-name">Business Storage / Practice Room 1</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','BF','C015')">
+          <span class="rm-code">C015</span>
+          <span class="rm-name">Water Tank / Pump System</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','BF','C016')">
+          <span class="rm-code">C016</span>
+          <span class="rm-name">PE / Fitness Lab</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','BF','C017')">
+          <span class="rm-code">C017</span>
+          <span class="rm-name">Practice Room 3</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','BF','C018')">
+          <span class="rm-code">C018</span>
+          <span class="rm-name">Business Office</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','BF','C020')">
+          <span class="rm-code">C020</span>
+          <span class="rm-name">Business Office</span>
+          <span class="rm-count zero">0</span>
+        </div></div>
+      </div><div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">1F</span>
+          <span style="font-size:12px;color:#94a3b8">18 phòng</span>
+          
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms"><div class="loc-room-row" onclick="filterToRoom('C','1F','C100')">
+          <span class="rm-code">C100</span>
+          <span class="rm-name">AHU Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','1F','C101')">
+          <span class="rm-code">C101</span>
+          <span class="rm-name">ACE / HS Lobby</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','1F','C103')">
+          <span class="rm-code">C103</span>
+          <span class="rm-name">Event Coordinator</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','1F','C105')">
+          <span class="rm-code">C105</span>
+          <span class="rm-name">Teaching &amp; Learning Office</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','1F','C106')">
+          <span class="rm-code">C106</span>
+          <span class="rm-name">Nurse Office</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','1F','C107')">
+          <span class="rm-code">C107</span>
+          <span class="rm-name">HOS Assistant</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','1F','C108')">
+          <span class="rm-code">C108</span>
+          <span class="rm-name">AHU</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','1F','C109')">
+          <span class="rm-code">C109</span>
+          <span class="rm-name">Head of School Office</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','1F','C110')">
+          <span class="rm-code">C110</span>
+          <span class="rm-name">Server Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','1F','C112')">
+          <span class="rm-code">C112</span>
+          <span class="rm-name">Security</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','1F','C113')">
+          <span class="rm-code">C113</span>
+          <span class="rm-name">PTA Office</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','1F','C114')">
+          <span class="rm-code">C114</span>
+          <span class="rm-name">Admissions</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','1F','C115')">
+          <span class="rm-code">C115</span>
+          <span class="rm-name">Teaching &amp; Learning Office</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','1F','C116')">
+          <span class="rm-code">C116</span>
+          <span class="rm-name">AHOC</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','1F','C118')">
+          <span class="rm-code">C118</span>
+          <span class="rm-name">Admissions</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','1F','C120')">
+          <span class="rm-code">C120</span>
+          <span class="rm-name">Nurse Office</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','1F','C122')">
+          <span class="rm-code">C122</span>
+          <span class="rm-name">Project Team / HOC Assistant</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','1F','C128')">
+          <span class="rm-code">C128</span>
+          <span class="rm-name">HR Office</span>
+          <span class="rm-count zero">0</span>
+        </div></div>
+      </div><div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">2F</span>
+          <span style="font-size:12px;color:#94a3b8">10 phòng</span>
+          
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms"><div class="loc-room-row" onclick="filterToRoom('C','2F','C200')">
+          <span class="rm-code">C200</span>
+          <span class="rm-name">HS Library</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','2F','C202')">
+          <span class="rm-code">C202</span>
+          <span class="rm-name">Cleaner Storage</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','2F','C204')">
+          <span class="rm-code">C204</span>
+          <span class="rm-name">Library Work Office</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','2F','C206')">
+          <span class="rm-code">C206</span>
+          <span class="rm-name">HS Librarian Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','2F','C208')">
+          <span class="rm-code">C208</span>
+          <span class="rm-name">Librarian / EE Coordinator</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','2F','C210')">
+          <span class="rm-code">C210</span>
+          <span class="rm-name">Computer Storage / IT Director</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','2F','C212')">
+          <span class="rm-code">C212</span>
+          <span class="rm-name">ICT Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','2F','C218')">
+          <span class="rm-code">C218</span>
+          <span class="rm-name">Art Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','2F','C220')">
+          <span class="rm-code">C220</span>
+          <span class="rm-name">MPR2 / Study Hall</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','2F','C222')">
+          <span class="rm-code">C222</span>
+          <span class="rm-name">Cafe Area</span>
+          <span class="rm-count zero">0</span>
+        </div></div>
+      </div><div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">3F</span>
+          <span style="font-size:12px;color:#94a3b8">24 phòng</span>
+          
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms"><div class="loc-room-row" onclick="filterToRoom('C','3F','C300')">
+          <span class="rm-code">C300</span>
+          <span class="rm-name">Admin Lounge / AHU</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','3F','C301')">
+          <span class="rm-code">C301</span>
+          <span class="rm-name">HS Office</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','3F','C302')">
+          <span class="rm-code">C302</span>
+          <span class="rm-name">HS Principal Assistant</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','3F','C303')">
+          <span class="rm-code">C303</span>
+          <span class="rm-name">HS Counselor</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','3F','C304')">
+          <span class="rm-code">C304</span>
+          <span class="rm-name">HS Principal</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','3F','C305')">
+          <span class="rm-code">C305</span>
+          <span class="rm-name">HS Counselor</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','3F','C306')">
+          <span class="rm-code">C306</span>
+          <span class="rm-name">HS Principal Assistant</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','3F','C308')">
+          <span class="rm-code">C308</span>
+          <span class="rm-name">Faculty Lounge</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','3F','C309')">
+          <span class="rm-code">C309</span>
+          <span class="rm-name">ENG / Health Seminar</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','3F','C310')">
+          <span class="rm-code">C310</span>
+          <span class="rm-name">Conference Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','3F','C311')">
+          <span class="rm-code">C311</span>
+          <span class="rm-name">Director of HS Counseling</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','3F','C312')">
+          <span class="rm-code">C312</span>
+          <span class="rm-name">ENG Classroom</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','3F','C313')">
+          <span class="rm-code">C313</span>
+          <span class="rm-name">ENG</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','3F','C314')">
+          <span class="rm-code">C314</span>
+          <span class="rm-name">Learning Space</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','3F','C315')">
+          <span class="rm-code">C315</span>
+          <span class="rm-name">Social Studies / G12 Dean</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','3F','C316')">
+          <span class="rm-code">C316</span>
+          <span class="rm-name">ENG Classroom</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','3F','C317')">
+          <span class="rm-code">C317</span>
+          <span class="rm-name">Social Studies / G11 Dean</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','3F','C318')">
+          <span class="rm-code">C318</span>
+          <span class="rm-name">Social Studies Teacher</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','3F','C319')">
+          <span class="rm-code">C319</span>
+          <span class="rm-name">Social Studies / CAS Coordinator</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','3F','C320')">
+          <span class="rm-code">C320</span>
+          <span class="rm-name">Social Studies Teacher</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','3F','C322')">
+          <span class="rm-code">C322</span>
+          <span class="rm-name">Social Studies Teacher</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','3F','C323')">
+          <span class="rm-code">C323</span>
+          <span class="rm-name">IT / Router Area</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','3F','C324')">
+          <span class="rm-code">C324</span>
+          <span class="rm-name">Classroom</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','3F','C326')">
+          <span class="rm-code">C326</span>
+          <span class="rm-name">HS Reception</span>
+          <span class="rm-count zero">0</span>
+        </div></div>
+      </div><div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">4F</span>
+          <span style="font-size:12px;color:#94a3b8">18 phòng</span>
+          
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms"><div class="loc-room-row" onclick="filterToRoom('C','4F','C400')">
+          <span class="rm-code">C400</span>
+          <span class="rm-name">IB Core / SS</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','4F','C401')">
+          <span class="rm-code">C401</span>
+          <span class="rm-name">HS English / MPR 4</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','4F','C402')">
+          <span class="rm-code">C402</span>
+          <span class="rm-name">HS English</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','4F','C403')">
+          <span class="rm-code">C403</span>
+          <span class="rm-name">HS English</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','4F','C404')">
+          <span class="rm-code">C404</span>
+          <span class="rm-name">HS English IDL</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','4F','C405')">
+          <span class="rm-code">C405</span>
+          <span class="rm-name">HS English</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','4F','C406')">
+          <span class="rm-code">C406</span>
+          <span class="rm-name">HS English</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','4F','C407')">
+          <span class="rm-code">C407</span>
+          <span class="rm-name">HS English</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','4F','C408')">
+          <span class="rm-code">C408</span>
+          <span class="rm-name">HS English</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','4F','C409')">
+          <span class="rm-code">C409</span>
+          <span class="rm-name">HS Spanish</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','4F','C410')">
+          <span class="rm-code">C410</span>
+          <span class="rm-name">Social Studies Teacher</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','4F','C411')">
+          <span class="rm-code">C411</span>
+          <span class="rm-name">HS Spanish</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','4F','C412')">
+          <span class="rm-code">C412</span>
+          <span class="rm-name">Mandarin Teacher</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','4F','C413')">
+          <span class="rm-code">C413</span>
+          <span class="rm-name">HS Mandarin</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','4F','C414')">
+          <span class="rm-code">C414</span>
+          <span class="rm-name">MWL</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','4F','C416')">
+          <span class="rm-code">C416</span>
+          <span class="rm-name">Cleaners Storage</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','4F','C418')">
+          <span class="rm-code">C418</span>
+          <span class="rm-name">Mandarin IDL</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('C','4F','C420')">
+          <span class="rm-code">C420</span>
+          <span class="rm-name">AHU</span>
+          <span class="rm-count zero">0</span>
+        </div></div>
+      </div><div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">Roof</span>
+          <span style="font-size:12px;color:#94a3b8">1 phòng</span>
+          
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms"><div class="loc-room-row" onclick="filterToRoom('C','Roof','C-Roof')">
+          <span class="rm-code">C-Roof</span>
+          <span class="rm-name">Cooling Tower Area</span>
+          <span class="rm-count zero">0</span>
+        </div></div>
+      </div></div>
+    </div><div class="loc-building">
+      <div class="loc-building-header" onclick="toggleBuilding(this)">
+        <div class="bc-icon" style="background:#d1fae5">📚</div>
+        <div class="bc-info">
+          <div class="bc-name" style="color:#065f46">Building MS (Middle School)</div>
+          <div class="bc-sub">6 tầng · 60 phòng</div>
+        </div>
+        <span class="bc-count">0 thiết bị</span>
+        <i class="bi bi-chevron-down chevron"></i>
+      </div>
+      <div class="loc-floors"><div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">BF</span>
+          <span style="font-size:12px;color:#94a3b8">8 phòng</span>
+          
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms"><div class="loc-room-row" onclick="filterToRoom('MS','BF','MS-004')">
+          <span class="rm-code">MS-004</span>
+          <span class="rm-name">Generator Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','BF','MS-006')">
+          <span class="rm-code">MS-006</span>
+          <span class="rm-name">Exhaust Fan Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','BF','MS-008')">
+          <span class="rm-code">MS-008</span>
+          <span class="rm-name">Oil Pump Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','BF','MS-010')">
+          <span class="rm-code">MS-010</span>
+          <span class="rm-name">MSB Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','BF','MS-012')">
+          <span class="rm-code">MS-012</span>
+          <span class="rm-name">Transformer Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','BF','MS-014')">
+          <span class="rm-code">MS-014</span>
+          <span class="rm-name">Store</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','BF','MS-018')">
+          <span class="rm-code">MS-018</span>
+          <span class="rm-name">Chiller Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','BF','MS-020')">
+          <span class="rm-code">MS-020</span>
+          <span class="rm-name">Pump System Room</span>
+          <span class="rm-count zero">0</span>
+        </div></div>
+      </div><div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">1F</span>
+          <span style="font-size:12px;color:#94a3b8">15 phòng</span>
+          
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms"><div class="loc-room-row" onclick="filterToRoom('MS','1F','MS-100')">
+          <span class="rm-code">MS-100</span>
+          <span class="rm-name">Grade 5-3</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','1F','MS-100.1')">
+          <span class="rm-code">MS-100.1</span>
+          <span class="rm-name">Grade 5-4</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','1F','MS-101')">
+          <span class="rm-code">MS-101</span>
+          <span class="rm-name">Dragon Den</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','1F','MS-102')">
+          <span class="rm-code">MS-102</span>
+          <span class="rm-name">Drama / Dance</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','1F','MS-102.1')">
+          <span class="rm-code">MS-102.1</span>
+          <span class="rm-name">Grade 5-2</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','1F','MS-103')">
+          <span class="rm-code">MS-103</span>
+          <span class="rm-name">MS Office Assistant</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','1F','MS-103.2')">
+          <span class="rm-code">MS-103.2</span>
+          <span class="rm-name">MS Librarian</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','1F','MS-104')">
+          <span class="rm-code">MS-104</span>
+          <span class="rm-name">Student Leadership Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','1F','MS-105.1')">
+          <span class="rm-code">MS-105.1</span>
+          <span class="rm-name">MS Principal Office</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','1F','MS-105.2')">
+          <span class="rm-code">MS-105.2</span>
+          <span class="rm-name">MS Associate Principal</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','1F','MS-106')">
+          <span class="rm-code">MS-106</span>
+          <span class="rm-name">Music Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','1F','MS-107')">
+          <span class="rm-code">MS-107</span>
+          <span class="rm-name">Admin Assistant</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','1F','MS-108')">
+          <span class="rm-code">MS-108</span>
+          <span class="rm-name">Music Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','1F','MS-110')">
+          <span class="rm-code">MS-110</span>
+          <span class="rm-name">Music Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','1F','MS-110.1')">
+          <span class="rm-code">MS-110.1</span>
+          <span class="rm-name">MS Nurse</span>
+          <span class="rm-count zero">0</span>
+        </div></div>
+      </div><div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">2F</span>
+          <span style="font-size:12px;color:#94a3b8">14 phòng</span>
+          
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms"><div class="loc-room-row" onclick="filterToRoom('MS','2F','MS-200')">
+          <span class="rm-code">MS-200</span>
+          <span class="rm-name">EAL</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','2F','MS-201')">
+          <span class="rm-code">MS-201</span>
+          <span class="rm-name">Storage for Classroom</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','2F','MS-202')">
+          <span class="rm-code">MS-202</span>
+          <span class="rm-name">ELA / Electives</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','2F','MS-203')">
+          <span class="rm-code">MS-203</span>
+          <span class="rm-name">Science / Math</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','2F','MS-204')">
+          <span class="rm-code">MS-204</span>
+          <span class="rm-name">Science</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','2F','MS-205')">
+          <span class="rm-code">MS-205</span>
+          <span class="rm-name">Exploratory Writing / ELA</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','2F','MS-206')">
+          <span class="rm-code">MS-206</span>
+          <span class="rm-name">Electronic Music Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','2F','MS-207')">
+          <span class="rm-code">MS-207</span>
+          <span class="rm-name">Math</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','2F','MS-208')">
+          <span class="rm-code">MS-208</span>
+          <span class="rm-name">ELEC &amp; ELV Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','2F','MS-209')">
+          <span class="rm-code">MS-209</span>
+          <span class="rm-name">Math</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','2F','MS-211')">
+          <span class="rm-code">MS-211</span>
+          <span class="rm-name">Mandarin</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','2F','MS-213')">
+          <span class="rm-code">MS-213</span>
+          <span class="rm-name">MS Art</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','2F','MS-215.3')">
+          <span class="rm-code">MS-215.3</span>
+          <span class="rm-name">Social Studies</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','2F','MS-215.4')">
+          <span class="rm-code">MS-215.4</span>
+          <span class="rm-name">Instructional Technology</span>
+          <span class="rm-count zero">0</span>
+        </div></div>
+      </div><div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">3F</span>
+          <span style="font-size:12px;color:#94a3b8">10 phòng</span>
+          
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms"><div class="loc-room-row" onclick="filterToRoom('MS','3F','MS-300')">
+          <span class="rm-code">MS-300</span>
+          <span class="rm-name">MS Gym</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','3F','MS-302')">
+          <span class="rm-code">MS-302</span>
+          <span class="rm-name">Social Studies</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','3F','MS-304')">
+          <span class="rm-code">MS-304</span>
+          <span class="rm-name">Math &amp; Science</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','3F','MS-305')">
+          <span class="rm-code">MS-305</span>
+          <span class="rm-name">Math / VEX</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','3F','MS-306')">
+          <span class="rm-code">MS-306</span>
+          <span class="rm-name">ELEC &amp; ELV Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','3F','MS-307')">
+          <span class="rm-code">MS-307</span>
+          <span class="rm-name">ELA / Creative Writing</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','3F','MS-309')">
+          <span class="rm-code">MS-309</span>
+          <span class="rm-name">Mandarin</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','3F','MS-311')">
+          <span class="rm-code">MS-311</span>
+          <span class="rm-name">ELA Classroom</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','3F','MS-313')">
+          <span class="rm-code">MS-313</span>
+          <span class="rm-name">Science Office</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','3F','MS-315')">
+          <span class="rm-code">MS-315</span>
+          <span class="rm-name">Classroom</span>
+          <span class="rm-count zero">0</span>
+        </div></div>
+      </div><div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">4F</span>
+          <span style="font-size:12px;color:#94a3b8">12 phòng</span>
+          
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms"><div class="loc-room-row" onclick="filterToRoom('MS','4F','MS-400')">
+          <span class="rm-code">MS-400</span>
+          <span class="rm-name">ELEC &amp; ELV Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','4F','MS-402')">
+          <span class="rm-code">MS-402</span>
+          <span class="rm-name">MS EAL</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','4F','MS-403')">
+          <span class="rm-code">MS-403</span>
+          <span class="rm-name">Language Arts / Social Studies</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','4F','MS-404')">
+          <span class="rm-code">MS-404</span>
+          <span class="rm-name">Science</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','4F','MS-404.1')">
+          <span class="rm-code">MS-404.1</span>
+          <span class="rm-name">EAL Office</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','4F','MS-405')">
+          <span class="rm-code">MS-405</span>
+          <span class="rm-name">ELA / Yearbook</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','4F','MS-406')">
+          <span class="rm-code">MS-406</span>
+          <span class="rm-name">ELEC &amp; ELV Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','4F','MS-407')">
+          <span class="rm-code">MS-407</span>
+          <span class="rm-name">ELA / Social Studies</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','4F','MS-409')">
+          <span class="rm-code">MS-409</span>
+          <span class="rm-name">Math</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','4F','MS-411')">
+          <span class="rm-code">MS-411</span>
+          <span class="rm-name">Math</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','4F','MS-413')">
+          <span class="rm-code">MS-413</span>
+          <span class="rm-name">MS PE / Gymnasium</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('MS','4F','MS-415')">
+          <span class="rm-code">MS-415</span>
+          <span class="rm-name">Social Studies</span>
+          <span class="rm-count zero">0</span>
+        </div></div>
+      </div><div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">Roof</span>
+          <span style="font-size:12px;color:#94a3b8">1 phòng</span>
+          
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms"><div class="loc-room-row" onclick="filterToRoom('MS','Roof','MS-Roof')">
+          <span class="rm-code">MS-Roof</span>
+          <span class="rm-name">Roof / Mechanical Area</span>
+          <span class="rm-count zero">0</span>
+        </div></div>
+      </div></div>
+    </div><div class="loc-building">
+      <div class="loc-building-header" onclick="toggleBuilding(this)">
+        <div class="bc-icon" style="background:#fef3c7">🔬</div>
+        <div class="bc-info">
+          <div class="bc-name" style="color:#92400e">Building SDC (Steam Design Center)</div>
+          <div class="bc-sub">6 tầng · 45 phòng</div>
+        </div>
+        <span class="bc-count">0 thiết bị</span>
+        <i class="bi bi-chevron-down chevron"></i>
+      </div>
+      <div class="loc-floors"><div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">BF</span>
+          <span style="font-size:12px;color:#94a3b8">7 phòng</span>
+          
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms"><div class="loc-room-row" onclick="filterToRoom('SDC','BF','SDC-001')">
+          <span class="rm-code">SDC-001</span>
+          <span class="rm-name">Generator Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','BF','SDC-003')">
+          <span class="rm-code">SDC-003</span>
+          <span class="rm-name">Daily Tank &amp; Oil Pump Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','BF','SDC-006')">
+          <span class="rm-code">SDC-006</span>
+          <span class="rm-name">Chiller Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','BF','SDC-008')">
+          <span class="rm-code">SDC-008</span>
+          <span class="rm-name">MSB Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','BF','SDC-010')">
+          <span class="rm-code">SDC-010</span>
+          <span class="rm-name">Transformer Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','BF','SDC-012')">
+          <span class="rm-code">SDC-012</span>
+          <span class="rm-name">Water Tank / Pump System</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','BF','SDC-014')">
+          <span class="rm-code">SDC-014</span>
+          <span class="rm-name">Water Tank / Pump System</span>
+          <span class="rm-count zero">0</span>
+        </div></div>
+      </div><div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">1F</span>
+          <span style="font-size:12px;color:#94a3b8">7 phòng</span>
+          
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms"><div class="loc-room-row" onclick="filterToRoom('SDC','1F','SDC-100')">
+          <span class="rm-code">SDC-100</span>
+          <span class="rm-name">Computer Science / Robotics</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','1F','SDC-101')">
+          <span class="rm-code">SDC-101</span>
+          <span class="rm-name">Science / Robotics Teacher</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','1F','SDC-102')">
+          <span class="rm-code">SDC-102</span>
+          <span class="rm-name">Computer Science / Robotics</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','1F','SDC-104')">
+          <span class="rm-code">SDC-104</span>
+          <span class="rm-name">IDL / Computer Science</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','1F','SDC-105')">
+          <span class="rm-code">SDC-105</span>
+          <span class="rm-name">Classroom</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','1F','SDC-106')">
+          <span class="rm-code">SDC-106</span>
+          <span class="rm-name">HS STEAM Assistant</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','1F','SDC-107')">
+          <span class="rm-code">SDC-107</span>
+          <span class="rm-name">Chiller Room</span>
+          <span class="rm-count zero">0</span>
+        </div></div>
+      </div><div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">2F</span>
+          <span style="font-size:12px;color:#94a3b8">8 phòng</span>
+          
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms"><div class="loc-room-row" onclick="filterToRoom('SDC','2F','SDC-200')">
+          <span class="rm-code">SDC-200</span>
+          <span class="rm-name">Visual Arts / Yearbook</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','2F','SDC-200.1')">
+          <span class="rm-code">SDC-200.1</span>
+          <span class="rm-name">Visual Arts</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','2F','SDC-200.2')">
+          <span class="rm-code">SDC-200.2</span>
+          <span class="rm-name">Visual Arts</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','2F','SDC-201')">
+          <span class="rm-code">SDC-201</span>
+          <span class="rm-name">HS Arts Assistant</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','2F','SDC-202')">
+          <span class="rm-code">SDC-202</span>
+          <span class="rm-name">Visual Arts Teacher</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','2F','SDC-203')">
+          <span class="rm-code">SDC-203</span>
+          <span class="rm-name">ELV Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','2F','SDC-204')">
+          <span class="rm-code">SDC-204</span>
+          <span class="rm-name">Visual Arts Teacher</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','2F','SDC-205')">
+          <span class="rm-code">SDC-205</span>
+          <span class="rm-name">Classroom</span>
+          <span class="rm-count zero">0</span>
+        </div></div>
+      </div><div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">3F</span>
+          <span style="font-size:12px;color:#94a3b8">12 phòng</span>
+          
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms"><div class="loc-room-row" onclick="filterToRoom('SDC','3F','SDC-300')">
+          <span class="rm-code">SDC-300</span>
+          <span class="rm-name">Math Teacher IDL</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','3F','SDC-301')">
+          <span class="rm-code">SDC-301</span>
+          <span class="rm-name">Staff / Mech Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','3F','SDC-302')">
+          <span class="rm-code">SDC-302</span>
+          <span class="rm-name">Math Teacher</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','3F','SDC-303')">
+          <span class="rm-code">SDC-303</span>
+          <span class="rm-name">Staff Area</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','3F','SDC-303.1')">
+          <span class="rm-code">SDC-303.1</span>
+          <span class="rm-name">ELV Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','3F','SDC-304')">
+          <span class="rm-code">SDC-304</span>
+          <span class="rm-name">Math Teacher</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','3F','SDC-305')">
+          <span class="rm-code">SDC-305</span>
+          <span class="rm-name">Math Teacher</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','3F','SDC-306')">
+          <span class="rm-code">SDC-306</span>
+          <span class="rm-name">Math Teacher</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','3F','SDC-307')">
+          <span class="rm-code">SDC-307</span>
+          <span class="rm-name">Math Teacher</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','3F','SDC-309')">
+          <span class="rm-code">SDC-309</span>
+          <span class="rm-name">Math Teacher</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','3F','SDC-311')">
+          <span class="rm-code">SDC-311</span>
+          <span class="rm-name">Classroom</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','3F','SDC-313')">
+          <span class="rm-code">SDC-313</span>
+          <span class="rm-name">Classroom</span>
+          <span class="rm-count zero">0</span>
+        </div></div>
+      </div><div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">4F</span>
+          <span style="font-size:12px;color:#94a3b8">10 phòng</span>
+          
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms"><div class="loc-room-row" onclick="filterToRoom('SDC','4F','SDC-400')">
+          <span class="rm-code">SDC-400</span>
+          <span class="rm-name">Science Teacher</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','4F','SDC-401')">
+          <span class="rm-code">SDC-401</span>
+          <span class="rm-name">Staff Area</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','4F','SDC-402')">
+          <span class="rm-code">SDC-402</span>
+          <span class="rm-name">Science Teacher</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','4F','SDC-403')">
+          <span class="rm-code">SDC-403</span>
+          <span class="rm-name">ELV Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','4F','SDC-404')">
+          <span class="rm-code">SDC-404</span>
+          <span class="rm-name">Science Teacher</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','4F','SDC-405')">
+          <span class="rm-code">SDC-405</span>
+          <span class="rm-name">Science Teacher</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','4F','SDC-406')">
+          <span class="rm-code">SDC-406</span>
+          <span class="rm-name">Science Teacher</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','4F','SDC-407')">
+          <span class="rm-code">SDC-407</span>
+          <span class="rm-name">Classroom</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','4F','SDC-409')">
+          <span class="rm-code">SDC-409</span>
+          <span class="rm-name">Classroom</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('SDC','4F','SDC-411')">
+          <span class="rm-code">SDC-411</span>
+          <span class="rm-name">Science Teacher</span>
+          <span class="rm-count zero">0</span>
+        </div></div>
+      </div><div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">Roof</span>
+          <span style="font-size:12px;color:#94a3b8">1 phòng</span>
+          
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms"><div class="loc-room-row" onclick="filterToRoom('SDC','Roof','SDC-Roof')">
+          <span class="rm-code">SDC-Roof</span>
+          <span class="rm-name">Roof / Mechanical Area</span>
+          <span class="rm-count zero">0</span>
+        </div></div>
+      </div></div>
+    </div><div class="loc-building">
+      <div class="loc-building-header" onclick="toggleBuilding(this)">
+        <div class="bc-icon" style="background:#ede9fe">⭐</div>
+        <div class="bc-info">
+          <div class="bc-name" style="color:#5b21b6">Building UES (Upper Elementary)</div>
+          <div class="bc-sub">4 tầng · 43 phòng</div>
+        </div>
+        <span class="bc-count">0 thiết bị</span>
+        <i class="bi bi-chevron-down chevron"></i>
+      </div>
+      <div class="loc-floors"><div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">1F</span>
+          <span style="font-size:12px;color:#94a3b8">8 phòng</span>
+          
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms"><div class="loc-room-row" onclick="filterToRoom('UES','1F','UES-101')">
+          <span class="rm-code">UES-101</span>
+          <span class="rm-name">Music Room 1</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','1F','UES-103')">
+          <span class="rm-code">UES-103</span>
+          <span class="rm-name">Music Room 2</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','1F','UES-104')">
+          <span class="rm-code">UES-104</span>
+          <span class="rm-name">Drama Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','1F','UES-105')">
+          <span class="rm-code">UES-105</span>
+          <span class="rm-name">Music Room 3</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','1F','UES-106')">
+          <span class="rm-code">UES-106</span>
+          <span class="rm-name">Counselor Office</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','1F','UES-107')">
+          <span class="rm-code">UES-107</span>
+          <span class="rm-name">MS/UES Principal Office</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','1F','UES-107.2')">
+          <span class="rm-code">UES-107.2</span>
+          <span class="rm-name">Associate Principal Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','1F','UES-108')">
+          <span class="rm-code">UES-108</span>
+          <span class="rm-name">Counselor Office</span>
+          <span class="rm-count zero">0</span>
+        </div></div>
+      </div><div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">2F</span>
+          <span style="font-size:12px;color:#94a3b8">14 phòng</span>
+          
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms"><div class="loc-room-row" onclick="filterToRoom('UES','2F','UES-200.2')">
+          <span class="rm-code">UES-200.2</span>
+          <span class="rm-name">Classroom</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','2F','UES-200.3')">
+          <span class="rm-code">UES-200.3</span>
+          <span class="rm-name">Meeting Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','2F','UES-201')">
+          <span class="rm-code">UES-201</span>
+          <span class="rm-name">LS Grade 4</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','2F','UES-202')">
+          <span class="rm-code">UES-202</span>
+          <span class="rm-name">EAL Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','2F','UES-203')">
+          <span class="rm-code">UES-203</span>
+          <span class="rm-name">LS Grade 4</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','2F','UES-204')">
+          <span class="rm-code">UES-204</span>
+          <span class="rm-name">LS Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','2F','UES-205')">
+          <span class="rm-code">UES-205</span>
+          <span class="rm-name">LS Grade 4</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','2F','UES-206')">
+          <span class="rm-code">UES-206</span>
+          <span class="rm-name">Grade 4 Meeting Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','2F','UES-207')">
+          <span class="rm-code">UES-207</span>
+          <span class="rm-name">LS Grade 4</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','2F','UES-208.1')">
+          <span class="rm-code">UES-208.1</span>
+          <span class="rm-name">PE Office</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','2F','UES-209')">
+          <span class="rm-code">UES-209</span>
+          <span class="rm-name">LS Grade 4</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','2F','UES-211')">
+          <span class="rm-code">UES-211</span>
+          <span class="rm-name">LS Grade 4</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','2F','UES-213')">
+          <span class="rm-code">UES-213</span>
+          <span class="rm-name">Grade 4 Breakout</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','2F','UES-215')">
+          <span class="rm-code">UES-215</span>
+          <span class="rm-name">LS Grade 4</span>
+          <span class="rm-count zero">0</span>
+        </div></div>
+      </div><div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">3F</span>
+          <span style="font-size:12px;color:#94a3b8">11 phòng</span>
+          
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms"><div class="loc-room-row" onclick="filterToRoom('UES','3F','UES-300')">
+          <span class="rm-code">UES-300</span>
+          <span class="rm-name">Grade 5 Meeting Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','3F','UES-301')">
+          <span class="rm-code">UES-301</span>
+          <span class="rm-name">LS Grade 5</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','3F','UES-302')">
+          <span class="rm-code">UES-302</span>
+          <span class="rm-name">Faculty Lounge</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','3F','UES-303')">
+          <span class="rm-code">UES-303</span>
+          <span class="rm-name">LS Grade 5</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','3F','UES-305')">
+          <span class="rm-code">UES-305</span>
+          <span class="rm-name">LS Grade 5</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','3F','UES-307')">
+          <span class="rm-code">UES-307</span>
+          <span class="rm-name">LS Grade 5</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','3F','UES-308')">
+          <span class="rm-code">UES-308</span>
+          <span class="rm-name">Lactation / Grade 5 Breakout</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','3F','UES-309')">
+          <span class="rm-code">UES-309</span>
+          <span class="rm-name">LS Grade 5</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','3F','UES-310')">
+          <span class="rm-code">UES-310</span>
+          <span class="rm-name">EAL Room</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','3F','UES-311')">
+          <span class="rm-code">UES-311</span>
+          <span class="rm-name">LS Grade 5</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','3F','UES-313')">
+          <span class="rm-code">UES-313</span>
+          <span class="rm-name">LS Grade 5</span>
+          <span class="rm-count zero">0</span>
+        </div></div>
+      </div><div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">4F</span>
+          <span style="font-size:12px;color:#94a3b8">10 phòng</span>
+          
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms"><div class="loc-room-row" onclick="filterToRoom('UES','4F','UES-400')">
+          <span class="rm-code">UES-400</span>
+          <span class="rm-name">Art Room &amp; Storage</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','4F','UES-401')">
+          <span class="rm-code">UES-401</span>
+          <span class="rm-name">Shared Ceramics</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','4F','UES-402')">
+          <span class="rm-code">UES-402</span>
+          <span class="rm-name">Breakout</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','4F','UES-403')">
+          <span class="rm-code">UES-403</span>
+          <span class="rm-name">Art Room &amp; Storage</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','4F','UES-404')">
+          <span class="rm-code">UES-404</span>
+          <span class="rm-name">Coaching Hub</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','4F','UES-405')">
+          <span class="rm-code">UES-405</span>
+          <span class="rm-name">Art Room &amp; Storage</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','4F','UES-406')">
+          <span class="rm-code">UES-406</span>
+          <span class="rm-name">Digital Media</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','4F','UES-407')">
+          <span class="rm-code">UES-407</span>
+          <span class="rm-name">Spark Lab</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','4F','UES-409')">
+          <span class="rm-code">UES-409</span>
+          <span class="rm-name">Laboratory</span>
+          <span class="rm-count zero">0</span>
+        </div><div class="loc-room-row" onclick="filterToRoom('UES','4F','UES-411')">
+          <span class="rm-code">UES-411</span>
+          <span class="rm-name">Maker &amp; Storage</span>
+          <span class="rm-count zero">0</span>
+        </div></div>
+      </div></div>
+    </div></div>
   </div>
 
 <!-- ADD/EDIT MODAL -->
@@ -705,6 +2295,14 @@ const LIFECYCLE_YEARS = {
   'Access Control': 5, 'Thiết bị khác': 5
 };
 
+const BUILDINGS={
+  'B':{label:'Building B (LES)',floors:{'BF':[['B000','Auditorium'],['B001','Stage'],['B002','Hazardous Waste Storage'],['B003','Storage'],['B004','Locker Area'],['B005','Facility Storage'],['B006','Cleaner Lounge'],['B007','Water Tank Area'],['B008','Facility Storage'],['B009','IT Router Room'],['B010','Collaboration Room'],['B012','Laundry'],['B013','Storage'],['B014','Chiller Room'],['B015','Facility Storage'],['B017','Resource Room'],['B019','Art Storage'],['B021','Storage'],['B023','Live Water Pump']],'1F':[['B100','Early Childhood'],['B101','Lost & Found Room'],['B102','Learning Support EC/K/1'],['B103','IT Room'],['B104','Kindergarten'],['B105','Storage'],['B106','Kindergarten'],['B107','Early Childhood'],['B108','ES Health Office / Clinic'],['B109','Early Childhood'],['B110','AHU Room'],['B111','Kindergarten'],['B113','Kindergarten'],['B115','MSB Room'],['B117','Transformer / Backup Generator'],['B119','Vacant'],['B121','Meeting Room'],['B123','Lower Associate Principal'],['B125','Kitchen for Studying'],['B126','Athletics Office']],'2F':[['B200','Vacant'],['B201','Vacant'],['B202','Faculty Lounge'],['B203','IT Router'],['B205','Book Room'],['B207','Explorers Program'],['B208','G1 Meeting Room'],['B209','Visual Arts EC/K/1'],['B210','Grade 1'],['B211','Grade 1'],['B212','Grade 1'],['B213','Grade 1'],['B214','EAL'],['B215','Grade 1 POD']],'3F':[['B300','Vietnamese'],['B301','Vietnamese'],['B302','EAL'],['B303','IT Router'],['B304','Grade 2'],['B305','IT Storage'],['B306','Grade 2'],['B307','Grade 2'],['B308','AHU'],['B309','Grade 2'],['B310','G2 Meeting Room'],['B311','Grade 2'],['B312','Counselor EC/K/2/4'],['B313','Learning Support'],['B315','Psychologist EC/1/3/5']],'4F':[['B400','AHU Area'],['B401','Grade 3'],['B402','Grade 3'],['B403','IT Router'],['B404','Team Breakout'],['B405','IT Storage'],['B406','Grade 3'],['B407','Grade 3'],['B408','Vacant'],['B409','Grade 3'],['B410','Vacant'],['B411','EAL 3'],['B412','G3 Meeting Room'],['B413','Vacant'],['B414','Vacant']]}},
+  'C':{label:'Building C (HS)',floors:{'BF':[['C000','Weight & Fitness Room'],['C001','HS Gym'],['C002','School Store / Storage'],['C003','PE Storage'],['C004','PE Office'],['C005','PE Storage'],['C006','Finance Storage'],['C007','Electrical Box / IT Area'],['C008','Meeting Room'],['C009','MPR / Practice Room 2'],['C010','Finance Storage'],['C011','Book Store / Student Records'],['C013','AHU Room / IP Store'],['C014','Business Storage / Practice Room 1'],['C015','Water Tank / Pump System'],['C016','PE / Fitness Lab'],['C017','Practice Room 3'],['C018','Business Office'],['C020','Business Office']],'1F':[['C100','AHU Room'],['C101','ACE / HS Lobby'],['C103','Event Coordinator'],['C105','Teaching & Learning Office'],['C106','Nurse Office'],['C107','HOS Assistant'],['C108','AHU'],['C109','Head of School Office'],['C110','Server Room'],['C112','Security'],['C113','PTA Office'],['C114','Admissions'],['C115','Teaching & Learning Office'],['C116','AHOC'],['C118','Admissions'],['C120','Nurse Office'],['C122','Project Team / HOC Assistant'],['C128','HR Office']],'2F':[['C200','HS Library'],['C202','Cleaner Storage'],['C204','Library Work Office'],['C206','HS Librarian Room'],['C208','Librarian / EE Coordinator'],['C210','Computer Storage / IT Director'],['C212','ICT Room'],['C218','Art Room'],['C220','MPR2 / Study Hall'],['C222','Cafe Area']],'3F':[['C300','Admin Lounge / AHU'],['C301','HS Office'],['C302','HS Principal Assistant'],['C303','HS Counselor'],['C304','HS Principal'],['C305','HS Counselor'],['C306','HS Principal Assistant'],['C308','Faculty Lounge'],['C309','ENG / Health Seminar'],['C310','Conference Room'],['C311','Director of HS Counseling'],['C312','ENG Classroom'],['C313','ENG'],['C314','Learning Space'],['C315','Social Studies / G12 Dean'],['C316','ENG Classroom'],['C317','Social Studies / G11 Dean'],['C318','Social Studies Teacher'],['C319','Social Studies / CAS Coordinator'],['C320','Social Studies Teacher'],['C322','Social Studies Teacher'],['C323','IT / Router Area'],['C324','Classroom'],['C326','HS Reception']],'4F':[['C400','IB Core / SS'],['C401','HS English / MPR 4'],['C402','HS English'],['C403','HS English'],['C404','HS English IDL'],['C405','HS English'],['C406','HS English'],['C407','HS English'],['C408','HS English'],['C409','HS Spanish'],['C410','Social Studies Teacher'],['C411','HS Spanish'],['C412','Mandarin Teacher'],['C413','HS Mandarin'],['C414','MWL'],['C416','Cleaners Storage'],['C418','Mandarin IDL'],['C420','AHU']],'Roof':[['C-Roof','Cooling Tower Area']]}},
+  'MS':{label:'Building MS (Middle School)',floors:{'BF':[['MS-004','Generator Room'],['MS-006','Exhaust Fan Room'],['MS-008','Oil Pump Room'],['MS-010','MSB Room'],['MS-012','Transformer Room'],['MS-014','Store'],['MS-018','Chiller Room'],['MS-020','Pump System Room']],'1F':[['MS-100','Grade 5-3'],['MS-100.1','Grade 5-4'],['MS-101','Dragon Den'],['MS-102','Drama / Dance'],['MS-102.1','Grade 5-2'],['MS-103','MS Office Assistant'],['MS-103.2','MS Librarian'],['MS-104','Student Leadership Room'],['MS-105.1','MS Principal Office'],['MS-105.2','MS Associate Principal'],['MS-106','Music Room'],['MS-107','Admin Assistant'],['MS-108','Music Room'],['MS-110','Music Room'],['MS-110.1','MS Nurse']],'2F':[['MS-200','EAL'],['MS-201','Storage for Classroom'],['MS-202','ELA / Electives'],['MS-203','Science / Math'],['MS-204','Science'],['MS-205','Exploratory Writing / ELA'],['MS-206','Electronic Music Room'],['MS-207','Math'],['MS-208','ELEC & ELV Room'],['MS-209','Math'],['MS-211','Mandarin'],['MS-213','MS Art'],['MS-215.3','Social Studies'],['MS-215.4','Instructional Technology']],'3F':[['MS-300','MS Gym'],['MS-302','Social Studies'],['MS-304','Math & Science'],['MS-305','Math / VEX'],['MS-306','ELEC & ELV Room'],['MS-307','ELA / Creative Writing'],['MS-309','Mandarin'],['MS-311','ELA Classroom'],['MS-313','Science Office'],['MS-315','Classroom']],'4F':[['MS-400','ELEC & ELV Room'],['MS-402','MS EAL'],['MS-403','Language Arts / Social Studies'],['MS-404','Science'],['MS-404.1','EAL Office'],['MS-405','ELA / Yearbook'],['MS-406','ELEC & ELV Room'],['MS-407','ELA / Social Studies'],['MS-409','Math'],['MS-411','Math'],['MS-413','MS PE / Gymnasium'],['MS-415','Social Studies']],'Roof':[['MS-Roof','Roof / Mechanical Area']]}},
+  'SDC':{label:'Building SDC (Steam Design Center)',floors:{'BF':[['SDC-001','Generator Room'],['SDC-003','Daily Tank & Oil Pump Room'],['SDC-006','Chiller Room'],['SDC-008','MSB Room'],['SDC-010','Transformer Room'],['SDC-012','Water Tank / Pump System'],['SDC-014','Water Tank / Pump System']],'1F':[['SDC-100','Computer Science / Robotics'],['SDC-101','Science / Robotics Teacher'],['SDC-102','Computer Science / Robotics'],['SDC-104','IDL / Computer Science'],['SDC-105','Classroom'],['SDC-106','HS STEAM Assistant'],['SDC-107','Chiller Room']],'2F':[['SDC-200','Visual Arts / Yearbook'],['SDC-200.1','Visual Arts'],['SDC-200.2','Visual Arts'],['SDC-201','HS Arts Assistant'],['SDC-202','Visual Arts Teacher'],['SDC-203','ELV Room'],['SDC-204','Visual Arts Teacher'],['SDC-205','Classroom']],'3F':[['SDC-300','Math Teacher IDL'],['SDC-301','Staff / Mech Room'],['SDC-302','Math Teacher'],['SDC-303','Staff Area'],['SDC-303.1','ELV Room'],['SDC-304','Math Teacher'],['SDC-305','Math Teacher'],['SDC-306','Math Teacher'],['SDC-307','Math Teacher'],['SDC-309','Math Teacher'],['SDC-311','Classroom'],['SDC-313','Classroom']],'4F':[['SDC-400','Science Teacher'],['SDC-401','Staff Area'],['SDC-402','Science Teacher'],['SDC-403','ELV Room'],['SDC-404','Science Teacher'],['SDC-405','Science Teacher'],['SDC-406','Science Teacher'],['SDC-407','Classroom'],['SDC-409','Classroom'],['SDC-411','Science Teacher']],'Roof':[['SDC-Roof','Roof / Mechanical Area']]}},
+  'UES':{label:'Building UES (Upper Elementary)',floors:{'1F':[['UES-101','Music Room 1'],['UES-103','Music Room 2'],['UES-104','Drama Room'],['UES-105','Music Room 3'],['UES-106','Counselor Office'],['UES-107','MS/UES Principal Office'],['UES-107.2','Associate Principal Room'],['UES-108','Counselor Office']],'2F':[['UES-200.2','Classroom'],['UES-200.3','Meeting Room'],['UES-201','LS Grade 4'],['UES-202','EAL Room'],['UES-203','LS Grade 4'],['UES-204','LS Room'],['UES-205','LS Grade 4'],['UES-206','Grade 4 Meeting Room'],['UES-207','LS Grade 4'],['UES-208.1','PE Office'],['UES-209','LS Grade 4'],['UES-211','LS Grade 4'],['UES-213','Grade 4 Breakout'],['UES-215','LS Grade 4']],'3F':[['UES-300','Grade 5 Meeting Room'],['UES-301','LS Grade 5'],['UES-302','Faculty Lounge'],['UES-303','LS Grade 5'],['UES-305','LS Grade 5'],['UES-307','LS Grade 5'],['UES-308','Lactation / Grade 5 Breakout'],['UES-309','LS Grade 5'],['UES-310','EAL Room'],['UES-311','LS Grade 5'],['UES-313','LS Grade 5']],'4F':[['UES-400','Art Room & Storage'],['UES-401','Shared Ceramics'],['UES-402','Breakout'],['UES-403','Art Room & Storage'],['UES-404','Coaching Hub'],['UES-405','Art Room & Storage'],['UES-406','Digital Media'],['UES-407','Spark Lab'],['UES-409','Laboratory'],['UES-411','Maker & Storage']]}}
+};
+
 let devices = [];
 let editingId = null;
 let chartType = null, chartStatus = null, chartYear = null;
@@ -771,7 +2369,7 @@ function setupNav() {
   });
 }
 
-function renderAll() { renderDashboard(); renderDevices(); populateLocationFilter(); }
+function renderAll() { renderDashboard(); renderDevices(); }
 
 // ─── UTILS ───────────────────────────────────────────────────────────────────
 function uid() { return 'D' + Date.now().toString(36).toUpperCase(); }
