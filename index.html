@@ -87,6 +87,36 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
 #toastContainer { position: fixed; bottom: 24px; right: 24px; z-index: 9999; }
 .toast-msg { background: #1e293b; color: #fff; border-radius: 8px; padding: 12px 20px; margin-top: 8px; font-size: 13px; box-shadow: 0 4px 12px rgba(0,0,0,.2); animation: fadeIn .2s; }
 @keyframes fadeIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
+.loc-building{border-radius:10px;background:#fff;border:1px solid #e2e8f0;margin-bottom:12px;overflow:hidden}
+.loc-building-header{padding:14px 18px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;border-bottom:1px solid #f1f5f9}
+.loc-building-header:hover{background:#f8fafc}
+.loc-building-header .bc-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.loc-building-header .bc-info{flex:1}
+.loc-building-header .bc-name{font-weight:700;font-size:14px;color:#1e293b}
+.loc-building-header .bc-sub{font-size:11px;color:#64748b;margin-top:1px}
+.loc-building-header .bc-count{background:#f1f5f9;border-radius:20px;padding:3px 10px;font-size:12px;font-weight:600;color:#475569}
+.loc-building-header .chevron{color:#94a3b8;transition:transform .2s;font-size:14px}
+.loc-building-header.collapsed .chevron{transform:rotate(-90deg)}
+.loc-floors{padding:0}
+.loc-floor{border-bottom:1px solid #f8fafc}
+.loc-floor:last-child{border-bottom:none}
+.loc-floor-header{padding:10px 18px 10px 54px;display:flex;align-items:center;gap:8px;cursor:pointer;background:#fafbfc}
+.loc-floor-header:hover{background:#f1f5f9}
+.loc-floor-header .fl-name{font-weight:600;font-size:13px;color:#374151;width:60px;flex-shrink:0}
+.loc-floor-header .fl-count{background:#e0e7ff;border-radius:20px;padding:2px 8px;font-size:11px;font-weight:600;color:#3730a3}
+.loc-floor-header .fl-chevron{color:#cbd5e1;font-size:12px;transition:transform .2s;margin-left:auto}
+.loc-floor-header.collapsed .fl-chevron{transform:rotate(-90deg)}
+.loc-rooms{padding:4px 0 4px 54px;background:#fff}
+.loc-room-row{display:flex;align-items:center;gap:8px;padding:6px 18px 6px 0;border-radius:6px;cursor:pointer;margin:1px 8px}
+.loc-room-row:hover{background:#f0f9ff}
+.loc-room-row .rm-code{font-family:monospace;font-size:11px;font-weight:700;color:#0369a1;width:80px;flex-shrink:0}
+.loc-room-row .rm-name{font-size:12px;color:#475569;flex:1}
+.loc-room-row .rm-count{background:#dcfce7;border-radius:20px;padding:1px 8px;font-size:11px;font-weight:600;color:#166534}
+.loc-room-row .rm-count.zero{background:#f1f5f9;color:#94a3b8}
+.loc-summary{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:20px}
+.loc-stat{background:#fff;border-radius:10px;border:1px solid #e2e8f0;padding:16px;text-align:center}
+.loc-stat .ls-val{font-size:22px;font-weight:700}
+.loc-stat .ls-lbl{font-size:11px;color:#64748b;margin-top:2px}
 </style>
 </head>
 <body class="modal-open" style="overflow: hidden; padding-right: 0px;">
@@ -101,7 +131,8 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
     <div class="sidebar-section">Tổng quan</div>
     <a href="#" class="active" data-page="dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a>
     <div class="sidebar-section">Quản lý</div>
-    <a href="#" data-page="devices" class=""><i class="bi bi-laptop"></i> Thiết bị</a>
+    <a href="#" data-page="devices"><i class="bi bi-laptop"></i> Thiết bị</a>
+    <a href="#" data-page="locations"><i class="bi bi-geo-alt"></i> Locations</a>
     <a href="#" data-page="warranty"><i class="bi bi-shield-check"></i> Bảo hành</a>
     <a href="#" data-page="budget"><i class="bi bi-currency-dollar"></i> Ngân sách / Lifecycle</a>
     <div class="sidebar-section">Công cụ</div>
@@ -160,13 +191,13 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
       <div class="col-lg-6">
         <div class="chart-box">
           <h6 class="mb-3 fw-600">Thiết bị theo loại</h6>
-          <canvas id="chartByType" height="1056" style="box-sizing: border-box; display: block; height: 528px; width: 528px;" width="1056"></canvas>
+          <canvas id="chartByType" height="1056" width="1056" style="display: block; box-sizing: border-box; height: 528px; width: 528px;"></canvas>
         </div>
       </div>
       <div class="col-lg-6">
         <div class="chart-box">
           <h6 class="mb-3 fw-600">Trạng thái thiết bị</h6>
-          <canvas id="chartByStatus" height="704" style="box-sizing: border-box; display: block; height: 352px; width: 528px;" width="1056"></canvas>
+          <canvas id="chartByStatus" height="704" width="1056" style="display: block; box-sizing: border-box; height: 352px; width: 528px;"></canvas>
         </div>
       </div>
       <div class="col-12">
@@ -177,31 +208,31 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
               <thead><tr><th>Tên</th><th>Loại</th><th>S/N</th><th>Hết bảo hành</th><th>Còn lại</th><th>Vị trí</th></tr></thead>
               <tbody id="dashWarrantyTable"><tr class="w-expired">
       <td><b>Dell Latitude 5540</b></td><td>Windows Laptop</td><td class="font-monospace">LAT24010</td>
-      <td>01/03/2023</td><td><span class="text-danger fw-bold">Đã hết 1228 ngày</span></td><td>Phòng hành chính</td>
+      <td>01/03/2023</td><td><span class="text-danger fw-bold">Đã hết 1230 ngày</span></td><td>Phòng hành chính</td>
     </tr><tr class="w-expired">
       <td><b>Hikvision DS-2CD2347G2</b></td><td>Camera IP</td><td class="font-monospace">HIK23006</td>
-      <td>20/05/2024</td><td><span class="text-danger fw-bold">Đã hết 782 ngày</span></td><td>Cổng vào</td>
+      <td>20/05/2024</td><td><span class="text-danger fw-bold">Đã hết 784 ngày</span></td><td>Cổng vào</td>
     </tr><tr class="w-expired">
       <td><b>Samsung QN85B 85"</b></td><td>TV</td><td class="font-monospace">SAM22009</td>
-      <td>10/09/2024</td><td><span class="text-danger fw-bold">Đã hết 669 ngày</span></td><td>Sảnh chính</td>
+      <td>10/09/2024</td><td><span class="text-danger fw-bold">Đã hết 671 ngày</span></td><td>Sảnh chính</td>
     </tr><tr class="w-expired">
       <td><b>iPad 10th Gen</b></td><td>iPad / Tablet</td><td class="font-monospace">IPD24008</td>
-      <td>01/10/2024</td><td><span class="text-danger fw-bold">Đã hết 648 ngày</span></td><td>Thư viện</td>
+      <td>01/10/2024</td><td><span class="text-danger fw-bold">Đã hết 650 ngày</span></td><td>Thư viện</td>
     </tr><tr class="w-expired">
       <td><b>MacBook Pro 14" M3</b></td><td>MacBook</td><td class="font-monospace">MBP25005</td>
-      <td>15/01/2025</td><td><span class="text-danger fw-bold">Đã hết 542 ngày</span></td><td>Phòng IT</td>
+      <td>15/01/2025</td><td><span class="text-danger fw-bold">Đã hết 544 ngày</span></td><td>Phòng IT</td>
     </tr><tr class="w-expired">
       <td><b>Ruckus R750</b></td><td>WiFi Access Point</td><td class="font-monospace">R75023001</td>
-      <td>15/03/2025</td><td><span class="text-danger fw-bold">Đã hết 483 ngày</span></td><td>Tầng 1 - Hành lang</td>
+      <td>15/03/2025</td><td><span class="text-danger fw-bold">Đã hết 485 ngày</span></td><td>Tầng 1 - Hành lang</td>
     </tr><tr class="w-expired">
       <td><b>Epson EB-L200F</b></td><td>Máy chiếu</td><td class="font-monospace">EP24003</td>
-      <td>01/06/2025</td><td><span class="text-danger fw-bold">Đã hết 405 ngày</span></td><td>Phòng họp Tầng 2</td>
+      <td>01/06/2025</td><td><span class="text-danger fw-bold">Đã hết 407 ngày</span></td><td>Phòng họp Tầng 2</td>
     </tr><tr class="w-expired">
       <td><b>QSC Q-SYS Core 110f</b></td><td>Ampli / DSP</td><td class="font-monospace">QSC24004</td>
-      <td>10/11/2025</td><td><span class="text-danger fw-bold">Đã hết 243 ngày</span></td><td>Hội trường</td>
+      <td>10/11/2025</td><td><span class="text-danger fw-bold">Đã hết 245 ngày</span></td><td>Hội trường</td>
     </tr><tr class="w-warning">
       <td><b>Ruckus ICX 7150-24</b></td><td>Switch</td><td class="font-monospace">ICX23002</td>
-      <td>20/08/2026</td><td><span class="text-warning fw-bold">Còn 40 ngày</span></td><td>Phòng Server</td>
+      <td>20/08/2026</td><td><span class="text-warning fw-bold">Còn 38 ngày</span></td><td>Phòng Server</td>
     </tr></tbody>
             </table>
           </div>
@@ -250,7 +281,7 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
       <td class="font-monospace" style="font-size:12px">192.168.10.11</td>
       <td style="font-size:12px">Tầng 1 - Hành lang</td>
       <td style="font-size:12px">15/03/2022</td>
-      <td style="font-size:12px"><span class="text-danger">15/03/2025<br><small>Hết 483n</small></span></td>
+      <td style="font-size:12px"><span class="text-danger">15/03/2025<br><small>Hết 485n</small></span></td>
       <td style="font-size:12px;white-space:nowrap">18.000.000</td>
       <td><span class="badge-type s-active">Đang dùng</span></td>
       <td onclick="event.stopPropagation()">
@@ -265,7 +296,7 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
       <td class="font-monospace" style="font-size:12px">192.168.1.2</td>
       <td style="font-size:12px">Phòng Server</td>
       <td style="font-size:12px">20/08/2021</td>
-      <td style="font-size:12px"><span class="text-warning">20/08/2026<br><small>Còn 40n</small></span></td>
+      <td style="font-size:12px"><span class="text-warning">20/08/2026<br><small>Còn 38n</small></span></td>
       <td style="font-size:12px;white-space:nowrap">45.000.000</td>
       <td><span class="badge-type s-active">Đang dùng</span></td>
       <td onclick="event.stopPropagation()">
@@ -280,7 +311,7 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
       <td class="font-monospace" style="font-size:12px">—</td>
       <td style="font-size:12px">Phòng họp Tầng 2</td>
       <td style="font-size:12px">01/06/2023</td>
-      <td style="font-size:12px"><span class="text-danger">01/06/2025<br><small>Hết 405n</small></span></td>
+      <td style="font-size:12px"><span class="text-danger">01/06/2025<br><small>Hết 407n</small></span></td>
       <td style="font-size:12px;white-space:nowrap">32.000.000</td>
       <td><span class="badge-type s-active">Đang dùng</span></td>
       <td onclick="event.stopPropagation()">
@@ -295,7 +326,7 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
       <td class="font-monospace" style="font-size:12px">192.168.20.5</td>
       <td style="font-size:12px">Hội trường</td>
       <td style="font-size:12px">10/11/2022</td>
-      <td style="font-size:12px"><span class="text-danger">10/11/2025<br><small>Hết 243n</small></span></td>
+      <td style="font-size:12px"><span class="text-danger">10/11/2025<br><small>Hết 245n</small></span></td>
       <td style="font-size:12px;white-space:nowrap">120.000.000</td>
       <td><span class="badge-type s-active">Đang dùng</span></td>
       <td onclick="event.stopPropagation()">
@@ -310,7 +341,7 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
       <td class="font-monospace" style="font-size:12px">192.168.1.50</td>
       <td style="font-size:12px">Phòng IT</td>
       <td style="font-size:12px">15/01/2024</td>
-      <td style="font-size:12px"><span class="text-danger">15/01/2025<br><small>Hết 542n</small></span></td>
+      <td style="font-size:12px"><span class="text-danger">15/01/2025<br><small>Hết 544n</small></span></td>
       <td style="font-size:12px;white-space:nowrap">52.000.000</td>
       <td><span class="badge-type s-active">Đang dùng</span></td>
       <td onclick="event.stopPropagation()">
@@ -325,7 +356,7 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
       <td class="font-monospace" style="font-size:12px">192.168.30.11</td>
       <td style="font-size:12px">Cổng vào</td>
       <td style="font-size:12px">20/05/2021</td>
-      <td style="font-size:12px"><span class="text-danger">20/05/2024<br><small>Hết 782n</small></span></td>
+      <td style="font-size:12px"><span class="text-danger">20/05/2024<br><small>Hết 784n</small></span></td>
       <td style="font-size:12px;white-space:nowrap">5.500.000</td>
       <td><span class="badge-type s-active">Đang dùng</span></td>
       <td onclick="event.stopPropagation()">
@@ -355,7 +386,7 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
       <td class="font-monospace" style="font-size:12px">—</td>
       <td style="font-size:12px">Thư viện</td>
       <td style="font-size:12px">01/10/2023</td>
-      <td style="font-size:12px"><span class="text-danger">01/10/2024<br><small>Hết 648n</small></span></td>
+      <td style="font-size:12px"><span class="text-danger">01/10/2024<br><small>Hết 650n</small></span></td>
       <td style="font-size:12px;white-space:nowrap">13.000.000</td>
       <td><span class="badge-type s-active">Đang dùng</span></td>
       <td onclick="event.stopPropagation()">
@@ -370,7 +401,7 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
       <td class="font-monospace" style="font-size:12px">192.168.1.80</td>
       <td style="font-size:12px">Sảnh chính</td>
       <td style="font-size:12px">10/09/2022</td>
-      <td style="font-size:12px"><span class="text-danger">10/09/2024<br><small>Hết 669n</small></span></td>
+      <td style="font-size:12px"><span class="text-danger">10/09/2024<br><small>Hết 671n</small></span></td>
       <td style="font-size:12px;white-space:nowrap">38.000.000</td>
       <td><span class="badge-type s-active">Đang dùng</span></td>
       <td onclick="event.stopPropagation()">
@@ -385,7 +416,7 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
       <td class="font-monospace" style="font-size:12px">—</td>
       <td style="font-size:12px">Phòng hành chính</td>
       <td style="font-size:12px">01/03/2020</td>
-      <td style="font-size:12px"><span class="text-danger">01/03/2023<br><small>Hết 1228n</small></span></td>
+      <td style="font-size:12px"><span class="text-danger">01/03/2023<br><small>Hết 1230n</small></span></td>
       <td style="font-size:12px;white-space:nowrap">22.000.000</td>
       <td><span class="badge-type s-repair">Sửa chữa</span></td>
       <td onclick="event.stopPropagation()">
@@ -495,6 +526,12 @@ input[type=search]::-webkit-search-cancel-button { cursor: pointer; }
     </div>
   </div>
 </div>
+
+  <!-- LOCATIONS -->
+  <div class="page" id="page-locations">
+    <div class="loc-summary" id="locSummary"></div>
+    <div id="locationTree"></div>
+  </div>
 
 <!-- ADD/EDIT MODAL -->
 <div class="modal fade" id="deviceModal" tabindex="-1">
@@ -722,13 +759,14 @@ function setupNav() {
       a.classList.add('active');
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.getElementById('page-' + page).classList.add('active');
-      const titles = { dashboard:'Dashboard', devices:'Quản lý thiết bị', warranty:'Theo dõi bảo hành', budget:'Ngân sách & Lifecycle', import:'Import / Export' };
+      const titles = { dashboard:'Dashboard', devices:'Quản lý thiết bị', warranty:'Theo dõi bảo hành', budget:'Ngân sách & Lifecycle', import:'Import / Export', locations:'Locations' };
       document.getElementById('pageTitle').textContent = titles[page] || page;
       if (page === 'dashboard') renderDashboard();
       if (page === 'devices') renderDevices();
       if (page === 'warranty') renderWarranty();
       if (page === 'budget') renderBudget();
       if (page === 'import') renderImportStats();
+      if(page==='locations')renderLocations();
     });
   });
 }
@@ -1253,6 +1291,90 @@ async function pushToGitHub(){
     statusEl.innerHTML='<span class="text-success fw-bold">✅ Push thành công! GitHub Pages sẽ cập nhật trong ~1 phút.</span>';
     toast('✅ Đã push lên GitHub!');
   }catch(e){statusEl.innerHTML='<span class="text-danger">❌ '+e.message+'</span>';toast('Lỗi: '+e.message,'error');}
+}
+function renderLocations(){
+  const bColors={'B':'#dbeafe','C':'#fce7f3','MS':'#d1fae5','SDC':'#fef3c7','UES':'#ede9fe'};
+  const bText={'B':'#1d4ed8','C':'#9d174d','MS':'#065f46','SDC':'#92400e','UES':'#5b21b6'};
+  const bIcons={'B':'🏫','C':'🎓','MS':'📚','SDC':'🔬','UES':'⭐'};
+
+  // Summary stats
+  const totalRooms=Object.values(BUILDINGS).reduce((s,b)=>s+Object.values(b.floors).reduce((s2,rooms)=>s2+rooms.length,0),0);
+  const totalFloors=Object.values(BUILDINGS).reduce((s,b)=>s+Object.keys(b.floors).length,0);
+  const occupiedRooms=new Set(devices.filter(d=>d.room).map(d=>d.building+'|'+d.floor+'|'+d.room)).size;
+  document.getElementById('locSummary').innerHTML=`
+    <div class="loc-stat"><div class="ls-val text-primary">${Object.keys(BUILDINGS).length}</div><div class="ls-lbl">Tòa nhà</div></div>
+    <div class="loc-stat"><div class="ls-val text-success">${totalFloors}</div><div class="ls-lbl">Tầng</div></div>
+    <div class="loc-stat"><div class="ls-val">${totalRooms}</div><div class="ls-lbl">Phòng</div></div>
+    <div class="loc-stat"><div class="ls-val text-warning">${occupiedRooms}</div><div class="ls-lbl">Phòng có thiết bị</div></div>
+    <div class="loc-stat"><div class="ls-val text-primary">${devices.length}</div><div class="ls-lbl">Tổng thiết bị</div></div>
+  `;
+
+  // Build device count maps
+  const countByBuilding={};const countByFloor={};const countByRoom={};
+  devices.forEach(d=>{
+    if(d.building){countByBuilding[d.building]=(countByBuilding[d.building]||0)+1;}
+    if(d.building&&d.floor){const k=d.building+'|'+d.floor;countByFloor[k]=(countByFloor[k]||0)+1;}
+    if(d.building&&d.floor&&d.room){const k=d.building+'|'+d.floor+'|'+d.room;countByRoom[k]=(countByRoom[k]||0)+1;}
+  });
+
+  const tree=document.getElementById('locationTree');
+  tree.innerHTML=Object.entries(BUILDINGS).map(([bKey,bData])=>{
+    const bCount=countByBuilding[bKey]||0;
+    const floorsHtml=Object.entries(bData.floors).map(([floor,rooms])=>{
+      const fKey=bKey+'|'+floor;const fCount=countByFloor[fKey]||0;
+      const roomsHtml=rooms.map(([code,name])=>{
+        const rKey=bKey+'|'+floor+'|'+code;const rCount=countByRoom[rKey]||0;
+        return`<div class="loc-room-row" onclick="filterToRoom('${bKey}','${floor}','${code}')">
+          <span class="rm-code">${code}</span>
+          <span class="rm-name">${name}</span>
+          <span class="rm-count ${rCount===0?'zero':''}">${rCount}</span>
+        </div>`;
+      }).join('');
+      return`<div class="loc-floor">
+        <div class="loc-floor-header" onclick="toggleFloor(this)">
+          <i class="bi bi-layers" style="color:#94a3b8;font-size:13px"></i>
+          <span class="fl-name">${floor}</span>
+          <span style="font-size:12px;color:#94a3b8">${rooms.length} phòng</span>
+          ${fCount>0?`<span class="fl-count">${fCount} thiết bị</span>`:''}
+          <i class="bi bi-chevron-down fl-chevron"></i>
+        </div>
+        <div class="loc-rooms">${roomsHtml}</div>
+      </div>`;
+    }).join('');
+    return`<div class="loc-building">
+      <div class="loc-building-header" onclick="toggleBuilding(this)">
+        <div class="bc-icon" style="background:${bColors[bKey]}">${bIcons[bKey]}</div>
+        <div class="bc-info">
+          <div class="bc-name" style="color:${bText[bKey]}">${bData.label}</div>
+          <div class="bc-sub">${Object.keys(bData.floors).length} tầng · ${Object.values(bData.floors).reduce((s,r)=>s+r.length,0)} phòng</div>
+        </div>
+        <span class="bc-count">${bCount} thiết bị</span>
+        <i class="bi bi-chevron-down chevron"></i>
+      </div>
+      <div class="loc-floors">${floorsHtml}</div>
+    </div>`;
+  }).join('');
+}
+
+function toggleBuilding(header){
+  header.classList.toggle('collapsed');
+  const floors=header.nextElementSibling;
+  floors.style.display=header.classList.contains('collapsed')?'none':'block';
+}
+function toggleFloor(header){
+  header.classList.toggle('collapsed');
+  const rooms=header.nextElementSibling;
+  rooms.style.display=header.classList.contains('collapsed')?'none':'block';
+}
+function filterToRoom(building,floor,room){
+  // Navigate to devices page with filters
+  document.querySelectorAll('#sidebar nav a[data-page]').forEach(a=>{if(a.dataset.page==='devices')a.click();});
+  setTimeout(()=>{
+    document.getElementById('filterBuilding').value=building;
+    document.getElementById('filterFloor').value=floor;
+    document.getElementById('searchInput').value=room;
+    renderDevices();
+  },100);
 }
 </script>
 <div class="modal fade show" id="githubModal" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
